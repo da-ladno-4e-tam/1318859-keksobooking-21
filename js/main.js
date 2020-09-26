@@ -1,58 +1,62 @@
 'use strict';
 
-const titles = ['Заголовок1', 'Заголовок2', 'Заголовок3', 'Заголовок4', 'Заголовок5', 'Заголовок6', 'Заголовок7', 'Заголовок8'];
-const prices = [1000, 2000, 3000, 4000, 5000];
-const types = ['palace', 'flat', 'house', 'bungalow'];
-const rooms = [1, 2, 3, 100];
-const guests = [1, 2, 3];
-const checkinTime = ['12:00', '13:00', '14:00'];
-const checkoutTime = ['12:00', '13:00', '14:00'];
-const featuresList = ["wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"];
-const descriptions = ['Описание1', 'Описание2', 'Описание3', 'Описание4', 'Описание5', 'Описание6', 'Описание7', 'Описание8'];
-const photosList = ["http://o0.github.io/assets/images/tokyo/hotel1.jpg", "http://o0.github.io/assets/images/tokyo/hotel2.jpg", "http://o0.github.io/assets/images/tokyo/hotel3.jpg"];
+const NUMBER_OF_ADVERTS = 8;
+const PIN_FIELD_MIN_Y = 130;
+const PIN_FIELD_HEIGHT = 500;
+const TITLES = ['Заголовок1', 'Заголовок2', 'Заголовок3', 'Заголовок4', 'Заголовок5', 'Заголовок6', 'Заголовок7', 'Заголовок8'];
+const PRICES = [1000, 2000, 3000, 4000, 5000];
+const TYPES = ['palace', 'flat', 'house', 'bungalow'];
+const ROOMS = [1, 2, 3, 100];
+const GUESTS = [1, 2, 3];
+const CHECKIN_TIME = ['12:00', '13:00', '14:00'];
+const CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
+const FEATURES_LIST = ["wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"];
+const DESCRIPTIONS = ['Описание1', 'Описание2', 'Описание3', 'Описание4', 'Описание5', 'Описание6', 'Описание7', 'Описание8'];
+const PHOTOS_LIST = ["http://o0.github.io/assets/images/tokyo/hotel1.jpg", "http://o0.github.io/assets/images/tokyo/hotel2.jpg", "http://o0.github.io/assets/images/tokyo/hotel3.jpg"];
+const PIN_OFFSET_X = -25;
+const PIN_OFFSET_Y = -70;
+
 const map = document.querySelector('.map');
 const adverts = [];
 const similarListElement = map.querySelector('.map__pins');
 const similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-const pinOffsetX = -25;
-const pinOffsetY = -70;
 
 function getRandomElement(arr) {
-  const randomElement = Math.floor(Math.random() * arr.length);
-  return arr[randomElement];
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
 function getRandomList(arr) {
+  const NUMBERS_OF_ELEMENTS = Math.floor(Math.random() * (arr.length + 1));
+  const cloneArr = [...arr];
+  const shuffleArr = cloneArr.sort(() => (Math.random() > 0.5) ? 1 : -1);
   const randomList = [];
-  for (let i = 0; i < arr.length; i++) {
-    const random = Boolean(Math.round(Math.random()));
-    if (random) {
-      randomList.push(arr[i]);
-    }
+
+  for (let i = 0; i < NUMBERS_OF_ELEMENTS; i++) {
+    randomList.push(shuffleArr[i]);
   }
   return randomList;
 }
 
 function getAdvertsList() {
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < NUMBER_OF_ADVERTS; i++) {
     const x = Math.floor(Math.random() * document.documentElement.clientWidth);
-    const y = Math.floor(Math.random() * 500) + 130;
+    const y = Math.floor(Math.random() * PIN_FIELD_HEIGHT) + PIN_FIELD_MIN_Y;
     const advert = {
       author: {
         avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
-        title: titles[i],
+        title: TITLES[i],
         address: `${x}, ${y}`,
-        price: getRandomElement(prices),
-        type: getRandomElement(types),
-        rooms: getRandomElement(rooms),
-        guests: getRandomElement(guests),
-        checkin: getRandomElement(checkinTime),
-        checkout: getRandomElement(checkoutTime),
-        features: getRandomList(featuresList),
-        description: descriptions[i],
-        photos: getRandomList(photosList)
+        price: getRandomElement(PRICES),
+        type: getRandomElement(TYPES),
+        rooms: getRandomElement(ROOMS),
+        guests: getRandomElement(GUESTS),
+        checkin: getRandomElement(CHECKIN_TIME),
+        checkout: getRandomElement(CHECKOUT_TIME),
+        features: getRandomList(FEATURES_LIST),
+        description: DESCRIPTIONS[i],
+        photos: getRandomList(PHOTOS_LIST)
       },
       location: {
         x: x,
@@ -72,7 +76,7 @@ map.classList.remove('map--faded');
 function renderPin(advert) {
   const pinElement = similarPinTemplate.cloneNode(true);
 
-  pinElement.style = `left: ${advert.location.x + pinOffsetX}px; top: ${advert.location.y + pinOffsetY}px;`;
+  pinElement.style = `left: ${advert.location.x + PIN_OFFSET_X}px; top: ${advert.location.y + PIN_OFFSET_Y}px;`;
   pinElement.querySelector('img').src = advert.author.avatar;
   pinElement.querySelector('img').alt = advert.offer.title;
   return pinElement;
