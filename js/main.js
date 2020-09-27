@@ -25,14 +25,22 @@ function getRandomElement(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 function getRandomList(arr) {
   const NUMBERS_OF_ELEMENTS = Math.floor(Math.random() * (arr.length + 1));
   const cloneArr = [...arr];
-  const shuffleArr = cloneArr.sort(() => (Math.random() > 0.5) ? 1 : -1);
   const randomList = [];
+  const shuffledArr = shuffle(cloneArr);
 
   for (let i = 0; i < NUMBERS_OF_ELEMENTS; i++) {
-    randomList.push(shuffleArr[i]);
+    randomList.push(shuffledArr[i]);
   }
   return randomList;
 }
