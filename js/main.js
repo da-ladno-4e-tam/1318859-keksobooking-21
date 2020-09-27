@@ -25,7 +25,7 @@ function getRandomElement(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function shuffle(arr) {
+function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -33,16 +33,19 @@ function shuffle(arr) {
   return arr;
 }
 
-function getRandomList(arr) {
+function getRandomSortedList(arr) {
   const NUMBERS_OF_ELEMENTS = Math.floor(Math.random() * (arr.length + 1));
   const cloneArr = [...arr];
-  const randomList = [];
-  const shuffledArr = shuffle(cloneArr);
-
-  for (let i = 0; i < NUMBERS_OF_ELEMENTS; i++) {
-    randomList.push(shuffledArr[i]);
+  const shuffledArr = shuffleArray(cloneArr);
+  const randomSortedList = [];
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < NUMBERS_OF_ELEMENTS; j++) {
+      if (arr[i] === shuffledArr[j]) {
+        randomSortedList.push(shuffledArr[j]);
+      }
+    }
   }
-  return randomList;
+  return randomSortedList;
 }
 
 function getAdvertsList() {
@@ -62,9 +65,9 @@ function getAdvertsList() {
         guests: getRandomElement(GUESTS),
         checkin: getRandomElement(CHECKIN_TIME),
         checkout: getRandomElement(CHECKOUT_TIME),
-        features: getRandomList(FEATURES_LIST),
+        features: getRandomSortedList(FEATURES_LIST),
         description: DESCRIPTIONS[i],
-        photos: getRandomList(PHOTOS_LIST)
+        photos: getRandomSortedList(PHOTOS_LIST)
       },
       location: {
         x: x,
