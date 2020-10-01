@@ -208,17 +208,17 @@ function activateMap() {
   addressInput.setAttribute('value', `${MAIN_PIN_X_ACTIVE}, ${MAIN_PIN_Y_ACTIVE}`);
 }
 
-mainPin.addEventListener('mousedown', function (evt) {
-  if (evt.which === 1) {
+function onMainPinClick(evt) {
+  if (evt.key === 'Enter' || evt.which === 1) {
     activateMap();
+    mainPin.removeEventListener('mousedown', onMainPinClick);
+    mainPin.removeEventListener('keydown', onMainPinClick);
   }
-});
+}
 
-mainPin.addEventListener('keydown', function (evt) {
-  if (evt.key === 'Enter') {
-    activateMap();
-  }
-});
+mainPin.addEventListener('mousedown', onMainPinClick);
+mainPin.addEventListener('keydown', onMainPinClick);
+
 
 titleInput.addEventListener('input', function () {
   const valueLength = titleInput.value.length;
@@ -235,9 +235,7 @@ titleInput.addEventListener('input', function () {
 });
 
 priceInput.addEventListener('input', function () {
-  const value = priceInput.value;
-
-  if (value > MAX_PRICE) {
+  if (priceInput.value > MAX_PRICE) {
     priceInput.setCustomValidity('Максимальная цена за ночь не должна превышать ' + MAX_PRICE + ' руб.');
   } else {
     priceInput.setCustomValidity('');
@@ -247,10 +245,8 @@ priceInput.addEventListener('input', function () {
 });
 
 typeInput.addEventListener('input', function () {
-  const value = typeInput.value;
-
   for (let i = 0; i < TYPES.length; i++) {
-    if (value === TYPES[i]) {
+    if (typeInput.value === TYPES[i]) {
       priceInput.setAttribute('min', `${MIN_TYPE_PRICE[i]}`);
       priceInput.placeholder = `${MIN_TYPE_PRICE[i]}`;
     }
@@ -286,7 +282,7 @@ function validatePicture(element) {
     if (re.test(path)) {
       element.setCustomValidity('');
     } else {
-      element.setCustomValidity('Выберите изображение формата "jpeg", "jpg" или "png"');
+      element.setCustomValidity('Выберите изображение формата "jpeg", "jpg", "webp" или "png"');
     }
 
     element.reportValidity();
