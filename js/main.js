@@ -20,7 +20,6 @@ const PIN_OFFSET_Y = -70;
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE = 1000000;
-
 const map = document.querySelector('.map');
 const mainPin = map.querySelector('.map__pin--main');
 const MAIN_PIN_X_NO_ACTIVE = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
@@ -35,19 +34,33 @@ const adverts = [];
 const similarListElement = map.querySelector('.map__pins');
 const similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 // const similarPopupTemplate = document.querySelector('#card').content.querySelector('.popup');
-
 const adForm = document.querySelector('.ad-form');
 const adFormFieldsets = adForm.querySelectorAll('fieldset');
 const avatarInput = adForm.querySelector('#avatar');
 const imagesInput = adForm.querySelector('#images');
 const titleInput = adForm.querySelector('#title');
+const titleValueLength = titleInput.value.length;
 const addressInput = adForm.querySelector('#address');
 const typeInput = adForm.querySelector('#type');
 const priceInput = adForm.querySelector('#price');
 const timeInInput = adForm.querySelector('#timein');
 const timeOutInput = adForm.querySelector('#timeout');
 const roomNumberInput = adForm.querySelector('#room_number');
+const roomNumberOneHundred = roomNumberInput.querySelector('option[value = "100"]');
 const capacityInput = adForm.querySelector('#capacity');
+const capacityNotForGuests = capacityInput.querySelector('option[value = "0"]');
+const REGULAR_FOR_IMAGES = /\.(jpeg|jpg|png|webp)$/;
+const KEY_ENTER = 'Enter';
+const MOUSE_BUTTON_LEFT = 1;
+const customValidities = {
+  title: {
+    minLength: 'Ещё ' + (MIN_TITLE_LENGTH - titleValueLength) + ' симв.',
+    maxLength: 'Удалите лишние' + (titleValueLength - MAX_TITLE_LENGTH) + ' симв.'
+  },
+  price: 'Максимальная цена за ночь не должна превышать' + MAX_PRICE + ' руб.',
+  capacity: 'Измените количество комнат или гостей',
+  images: 'Выберите изображение формата "jpeg", "jpg", "webp" или "png"'
+};
 
 function getRandomElement(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -176,24 +189,20 @@ function getContent(render, arr, parent, child) {
 
 getContent(renderPopup, adverts, map, 1);*/
 
-function disableElement(element) {
-  element.setAttribute('disabled', 'disabled');
-}
-
-function enableElement(element) {
-  element.removeAttribute('disabled');
-}
-
-function doActionInArray(arr, action) {
+function disableElementsInArray(arr, flag) {
   for (let i = 0; i < arr.length; i++) {
-    action(arr[i]);
+    if (flag === true) {
+      arr[i].setAttribute('disabled', 'disabled');
+    } else {
+      arr[i].removeAttribute('disabled');
+    }
   }
 }
 
 window.addEventListener('load', function () {
-  doActionInArray(filterSelects, disableElement);
-  doActionInArray(filterFieldsets, disableElement);
-  doActionInArray(adFormFieldsets, disableElement);
+  disableElementsInArray(filterSelects, true);
+  disableElementsInArray(filterFieldsets, true);
+  disableElementsInArray(adFormFieldsets, true);
   addressInput.setAttribute('value', `${MAIN_PIN_X_NO_ACTIVE}, ${MAIN_PIN_Y_NO_ACTIVE}`);
   addressInput.setAttribute('readonly', `true`);
 });
@@ -201,15 +210,15 @@ window.addEventListener('load', function () {
 function activateMap() {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
-  doActionInArray(filterSelects, enableElement);
-  doActionInArray(filterFieldsets, enableElement);
-  doActionInArray(adFormFieldsets, enableElement);
+  disableElementsInArray(filterSelects, false);
+  disableElementsInArray(filterFieldsets, false);
+  disableElementsInArray(adFormFieldsets, false);
   getContent(renderPin, adverts, similarListElement, 0);
   addressInput.setAttribute('value', `${MAIN_PIN_X_ACTIVE}, ${MAIN_PIN_Y_ACTIVE}`);
 }
 
 function onMainPinClick(evt) {
-  if (evt.key === 'Enter' || evt.which === 1) {
+  if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
     activateMap();
     mainPin.removeEventListener('mousedown', onMainPinClick);
     mainPin.removeEventListener('keydown', onMainPinClick);
@@ -221,12 +230,10 @@ mainPin.addEventListener('keydown', onMainPinClick);
 
 
 titleInput.addEventListener('input', function () {
-  const valueLength = titleInput.value.length;
-
-  if (valueLength < MIN_TITLE_LENGTH) {
-    titleInput.setCustomValidity('Ещё ' + (MIN_TITLE_LENGTH - valueLength) + ' симв.');
-  } else if (valueLength > MAX_TITLE_LENGTH) {
-    titleInput.setCustomValidity('Удалите лишние ' + (valueLength - MAX_TITLE_LENGTH) + ' симв.');
+  if (titleValueLength < MIN_TITLE_LENGTH) {
+    titleInput.setCustomValidity(customValidities.title.minLength);
+  } else if (titleValueLength > MAX_TITLE_LENGTH) {
+    titleInput.setCustomValidity(customValidities.title.maxLength);
   } else {
     titleInput.setCustomValidity('');
   }
@@ -236,7 +243,7 @@ titleInput.addEventListener('input', function () {
 
 priceInput.addEventListener('input', function () {
   if (priceInput.value > MAX_PRICE) {
-    priceInput.setCustomValidity('Максимальная цена за ночь не должна превышать ' + MAX_PRICE + ' руб.');
+    priceInput.setCustomValidity(customValidities.price);
   } else {
     priceInput.setCustomValidity('');
   }
@@ -262,13 +269,13 @@ timeOutInput.addEventListener('input', function () {
 });
 
 capacityInput.addEventListener('input', function () {
-  const capacityValue = Number(capacityInput.value);
-  const roomsValue = Number(roomNumberInput.value);
+  const capacityValue = capacityInput.value;
+  const roomsValue = roomNumberInput.value;
 
-  if ((capacityValue <= roomsValue && roomsValue !== 100 && capacityValue !== 0) || (roomsValue === 100 && capacityValue === 0)) {
+  if ((capacityValue <= roomsValue && roomsValue !== roomNumberOneHundred.value && capacityValue !== capacityNotForGuests.value) || (roomsValue === roomNumberOneHundred.value && capacityValue === capacityNotForGuests.value)) {
     capacityInput.setCustomValidity('');
   } else {
-    capacityInput.setCustomValidity('Измените количество комнат или гостей');
+    capacityInput.setCustomValidity(customValidities.capacity);
   }
 
   capacityInput.reportValidity();
@@ -277,12 +284,11 @@ capacityInput.addEventListener('input', function () {
 function validatePicture(element) {
   element.addEventListener('input', function () {
     const path = element.value;
-    const re = /\.(jpeg|jpg|png|webp)$/;
 
-    if (re.test(path)) {
+    if (REGULAR_FOR_IMAGES.test(path)) {
       element.setCustomValidity('');
     } else {
-      element.setCustomValidity('Выберите изображение формата "jpeg", "jpg", "webp" или "png"');
+      element.setCustomValidity(customValidities.images);
     }
 
     element.reportValidity();
