@@ -192,7 +192,12 @@ function renderPopup(advert) {
 
 function disableElementsInArray(arr, flag) {
   for (let i = 0; i < arr.length; i++) {
-    (flag === true) ? arr[i].setAttribute('disabled', 'disabled') : arr[i].removeAttribute('disabled');
+    // (flag === true) ? arr[i].setAttribute('disabled', 'disabled') : arr[i].removeAttribute('disabled');
+    if (flag === true) {
+      arr[i].setAttribute('disabled', 'disabled');
+    } else {
+      arr[i].removeAttribute('disabled');
+    }
   }
 }
 
@@ -367,7 +372,12 @@ capacityInput.addEventListener('input', function () {
 function validatePicture(element) {
   element.addEventListener('input', function () {
     const path = element.value;
-    (REGULAR_FOR_IMAGES.test(path)) ? element.setCustomValidity('') : element.setCustomValidity(customValidities.images);
+    // (REGULAR_FOR_IMAGES.test(path)) ? element.setCustomValidity('') : element.setCustomValidity(customValidities.images);
+    if (REGULAR_FOR_IMAGES.test(path)) {
+      element.setCustomValidity('');
+    } else {
+      element.setCustomValidity(customValidities.images);
+    }
     element.reportValidity();
   });
 }
