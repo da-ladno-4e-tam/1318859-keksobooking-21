@@ -17,16 +17,20 @@ const DESCRIPTIONS = ['Описание1', 'Описание2', 'Описани�
 const PHOTOS_LIST = ["http://o0.github.io/assets/images/tokyo/hotel1.jpg", "http://o0.github.io/assets/images/tokyo/hotel2.jpg", "http://o0.github.io/assets/images/tokyo/hotel3.jpg"];
 const PIN_OFFSET_X = -25;
 const PIN_OFFSET_Y = -70;
+const MAIN_PIN_TIP = 22;
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE = 1000000;
+const REGULAR_FOR_IMAGES = /\.(jpeg|jpg|png|webp)$/;
+const KEY_ENTER = 'Enter';
+const KEY_ESCAPE = 'Escape';
+const MOUSE_BUTTON_LEFT = 1;
 const map = document.querySelector('.map');
 const mainPin = map.querySelector('.map__pin--main');
-const MAIN_PIN_X_NO_ACTIVE = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
-const MAIN_PIN_Y_NO_ACTIVE = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
-const MAIN_PIN_X_ACTIVE = MAIN_PIN_X_NO_ACTIVE;
-const MAIN_PIN_TIP = 22;
-const MAIN_PIN_Y_ACTIVE = MAIN_PIN_Y_NO_ACTIVE + MAIN_PIN_TIP;
+const noActiveMainPinX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
+const noActiveMainPinY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
+const activeMainPinX = noActiveMainPinX;
+const activeMainPinY = noActiveMainPinY + MAIN_PIN_TIP;
 const mapFilters = map.querySelector('.map__filters');
 const filterSelects = mapFilters.querySelectorAll('select');
 const filterFieldsets = mapFilters.querySelectorAll('fieldset');
@@ -48,11 +52,6 @@ const timeOutInput = adForm.querySelector('#timeout');
 const roomNumberInput = adForm.querySelector('#room_number');
 const roomNumberOneHundred = roomNumberInput.querySelector('option[value = "100"]');
 const capacityInput = adForm.querySelector('#capacity');
-const capacityNotForGuests = capacityInput.querySelector('option[value = "0"]');
-const REGULAR_FOR_IMAGES = /\.(jpeg|jpg|png|webp)$/;
-const KEY_ENTER = 'Enter';
-const KEY_ESCAPE = 'Escape';
-const MOUSE_BUTTON_LEFT = 1;
 const customValidities = {
   title: {
     minLength: `Заголовок должен быть не меньше ${MIN_TITLE_LENGTH} симв.`,
@@ -122,8 +121,6 @@ function getAdvertsList() {
   return adverts;
 }
 
-getAdvertsList();
-
 function renderPin(advert) {
   const pinElement = similarPinTemplate.cloneNode(true);
 
@@ -142,57 +139,66 @@ function getContent(render, arr, parent, child) {
   parent.insertBefore(fragment, parent.children[child]);
 }
 
+function hideUnusualFeatures(feature, features) {
+  for (let j = 0; j < features.length; j++) {
+    if (feature.className.includes(`--${features[j]}`)) {
+      feature.style = 'display: inline-block';
+      break;
+    } else {
+      feature.style = 'display: none';
+    }
+  }
+}
+
+function renderPhotos(photoData, template, photosList) {
+  if (photoData.length < 1) {
+    template.parentNode.removeChild(template);
+  } else {
+    template.src = photoData[0];
+    for (let i = 1; i < photoData.length; i++) {
+      const newPhoto = template.cloneNode(true);
+      photosList.append(newPhoto);
+      photosList.children[i].src = photoData[i];
+    }
+  }
+}
+
 function renderPopup(advert) {
+
   const popupElement = similarPopupTemplate.cloneNode(true);
-  popupElement.classList.add('hidden');
   const featuresList = popupElement.querySelector('.popup__features');
   const photosList = popupElement.querySelector('.popup__photos');
   const photoTemplate = photosList.children[0];
 
+  popupElement.classList.add('hidden');
   popupElement.querySelector('.popup__title').textContent = advert.offer.title;
   popupElement.querySelector('.popup__text--address').textContent = advert.offer.address;
   popupElement.querySelector('.popup__text--price').innerHTML = `${advert.offer.price}&#x20bd;<span>/ночь</span>`;
+
   for (let i = 0; i < TYPES.length; i++) {
     if (advert.offer.type === TYPES[i]) {
       popupElement.querySelector('.popup__type').textContent = TYPES_LOCAL[i];
     }
   }
+
   popupElement.querySelector('.popup__text--capacity').textContent = `${advert.offer.rooms} комнаты для ${advert.offer.guests} гостей`;
   popupElement.querySelector('.popup__text--time').textContent = `Заезд после ${advert.offer.checkin}, выезд до ${advert.offer.checkout}`;
 
   for (let i = 0; i < featuresList.children.length; i++) {
-    for (let j = 0; j < advert.offer.features.length; j++) {
-      if (featuresList.children[i].className.includes(`--${advert.offer.features[j]}`)) {
-        featuresList.children[i].style = 'display: inline-block';
-        break;
-      } else {
-        featuresList.children[i].style = 'display: none';
-      }
-    }
+    hideUnusualFeatures(featuresList.children[i], advert.offer.features);
   }
 
   popupElement.querySelector('.popup__description').textContent = advert.offer.description;
 
-  if (advert.offer.photos.length < 1) {
-    photoTemplate.parentNode.removeChild(photoTemplate);
-  } else {
-    photoTemplate.src = advert.offer.photos[0];
-    for (let i = 1; i < advert.offer.photos.length; i++) {
-      const newPhoto = photoTemplate.cloneNode(true);
-      photosList.append(newPhoto);
-      photosList.children[i].src = advert.offer.photos[i];
-    }
-  }
+  renderPhotos(advert.offer.photos, photoTemplate, photosList);
 
   popupElement.querySelector('.popup__avatar').src = advert.author.avatar;
 
   return popupElement;
 }
 
-
 function disableElementsInArray(arr, flag) {
   for (let i = 0; i < arr.length; i++) {
-    // (flag === true) ? arr[i].setAttribute('disabled', 'disabled') : arr[i].removeAttribute('disabled');
     if (flag === true) {
       arr[i].setAttribute('disabled', 'disabled');
     } else {
@@ -205,7 +211,7 @@ window.addEventListener('load', function () {
   disableElementsInArray(filterSelects, true);
   disableElementsInArray(filterFieldsets, true);
   disableElementsInArray(adFormFieldsets, true);
-  addressInput.setAttribute('value', `${MAIN_PIN_X_NO_ACTIVE}, ${MAIN_PIN_Y_NO_ACTIVE}`);
+  addressInput.setAttribute('value', `${noActiveMainPinX}, ${noActiveMainPinY}`);
   addressInput.setAttribute('readonly', `true`);
 });
 
@@ -242,7 +248,7 @@ function activateMap() {
   setOnPinEvents(domAdverts);
   setOnPopupEvents(domAdverts);
   hideAllAdverts();
-  addressInput.setAttribute('value', `${MAIN_PIN_X_ACTIVE}, ${MAIN_PIN_Y_ACTIVE}`);
+  addressInput.setAttribute('value', `${activeMainPinX}, ${activeMainPinY}`);
 }
 
 function hideAdvert(advert) {
@@ -269,14 +275,13 @@ function setOnPopupCloseEnterPress(advert) {
 function onPopupEscPress(evt) {
   if (evt.key === KEY_ESCAPE) {
     evt.preventDefault();
+    document.removeEventListener('keydown', onPopupEscPress);
     hideAllAdverts();
   }
-  document.removeEventListener('keydown', onPopupEscPress);
 }
 
 function showAdvert(advert) {
   hideAllAdverts();
-  document.removeEventListener('keydown', onPopupEscPress);
   advert.classList.remove('hidden');
 }
 
@@ -296,7 +301,6 @@ function setOnPinEnterPress(advert) {
     document.addEventListener('keydown', onPopupEscPress);
   };
 }
-
 
 function onMainPinClick(evt) {
   if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
@@ -356,23 +360,24 @@ timeOutInput.addEventListener('input', function () {
   timeInInput.value = timeOutInput.value;
 });
 
-capacityInput.addEventListener('input', function () {
-  const capacityValue = capacityInput.value;
-  const roomsValue = roomNumberInput.value;
-
-  if ((capacityValue <= roomsValue && roomsValue !== roomNumberOneHundred.value && capacityValue !== capacityNotForGuests.value) || (roomsValue === roomNumberOneHundred.value && capacityValue === capacityNotForGuests.value)) {
-    capacityInput.setCustomValidity('');
-  } else {
+function validateCapacity() {
+  const capacityValue = Number(capacityInput.value);
+  const roomsValue = Number(roomNumberInput.value);
+  if ((capacityValue > roomsValue) || (roomsValue === Number(roomNumberOneHundred.value) && capacityValue !== roomsValue)) {
     capacityInput.setCustomValidity(customValidities.capacity);
+  } else {
+    capacityInput.setCustomValidity('');
   }
 
   capacityInput.reportValidity();
-});
+}
+
+capacityInput.addEventListener('input', validateCapacity);
+roomNumberInput.addEventListener('input', validateCapacity);
 
 function validatePicture(element) {
   element.addEventListener('input', function () {
     const path = element.value;
-    // (REGULAR_FOR_IMAGES.test(path)) ? element.setCustomValidity('') : element.setCustomValidity(customValidities.images);
     if (REGULAR_FOR_IMAGES.test(path)) {
       element.setCustomValidity('');
     } else {
@@ -381,6 +386,8 @@ function validatePicture(element) {
     element.reportValidity();
   });
 }
+
+getAdvertsList();
 
 validatePicture(avatarInput);
 validatePicture(imagesInput);
