@@ -6,7 +6,6 @@
   const MAX_TITLE_LENGTH = 100;
   const MAX_PRICE = 1000000;
   const REGULAR_FOR_IMAGES = /\.(jpeg|jpg|png|webp)$/;
-
   const avatarInput = window.adForm.querySelector('#avatar');
   const imagesInput = window.adForm.querySelector('#images');
   const titleInput = window.adForm.querySelector('#title');
@@ -27,6 +26,30 @@
     images: `Выберите изображение формата "jpeg", "jpg", "webp" или "png"`
   };
 
+  window.form = {
+    validateCapacity: function () {
+      const capacityValue = Number(capacityInput.value);
+      const roomsValue = Number(roomNumberInput.value);
+      if ((capacityValue > roomsValue) || (roomsValue === Number(roomNumberOneHundred.value) && capacityValue !== roomsValue)) {
+        capacityInput.setCustomValidity(customValidities.capacity);
+      } else {
+        capacityInput.setCustomValidity('');
+      }
+      capacityInput.reportValidity();
+    },
+
+    validatePicture: function (element) {
+      element.addEventListener('input', function () {
+        const path = element.value;
+        if (REGULAR_FOR_IMAGES.test(path)) {
+          element.setCustomValidity('');
+        } else {
+          element.setCustomValidity(customValidities.images);
+        }
+        element.reportValidity();
+      });
+    }
+  };
 
   titleInput.addEventListener('input', function () {
     const titleValueLength = titleInput.value.length;
@@ -68,33 +91,6 @@
   timeOutInput.addEventListener('input', function () {
     timeInInput.value = timeOutInput.value;
   });
-
-  window.form = {
-
-    validateCapacity: function () {
-      const capacityValue = Number(capacityInput.value);
-      const roomsValue = Number(roomNumberInput.value);
-      if ((capacityValue > roomsValue) || (roomsValue === Number(roomNumberOneHundred.value) && capacityValue !== roomsValue)) {
-        capacityInput.setCustomValidity(customValidities.capacity);
-      } else {
-        capacityInput.setCustomValidity('');
-      }
-
-      capacityInput.reportValidity();
-    },
-
-    validatePicture: function (element) {
-      element.addEventListener('input', function () {
-        const path = element.value;
-        if (REGULAR_FOR_IMAGES.test(path)) {
-          element.setCustomValidity('');
-        } else {
-          element.setCustomValidity(customValidities.images);
-        }
-        element.reportValidity();
-      });
-    }
-  };
 
   capacityInput.addEventListener('input', window.form.validateCapacity);
   roomNumberInput.addEventListener('input', window.form.validateCapacity);

@@ -5,18 +5,18 @@
   const KEY_ENTER = 'Enter';
   const KEY_ESCAPE = 'Escape';
   const MOUSE_BUTTON_LEFT = 1;
+  window.adForm = document.querySelector('.ad-form');
+  window.similarListElement = window.map.querySelector('.map__pins');
   const mainPin = window.map.querySelector('.map__pin--main');
+  const mapFilters = window.map.querySelector('.map__filters');
+  const adFormFieldsets = window.adForm.querySelectorAll('fieldset');
+  const addressInput = window.adForm.querySelector('#address');
   const noActiveMainPinX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
   const noActiveMainPinY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
   const activeMainPinX = noActiveMainPinX;
   const activeMainPinY = noActiveMainPinY + MAIN_PIN_TIP;
-  const mapFilters = window.map.querySelector('.map__filters');
   const filterSelects = mapFilters.querySelectorAll('select');
   const filterFieldsets = mapFilters.querySelectorAll('fieldset');
-  window.similarListElement = window.map.querySelector('.map__pins');
-  window.adForm = document.querySelector('.ad-form');
-  const adFormFieldsets = window.adForm.querySelectorAll('fieldset');
-  const addressInput = window.adForm.querySelector('#address');
 
   window.main = {
     setOnPinEvents: function (advertsArray) {
