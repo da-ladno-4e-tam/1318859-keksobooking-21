@@ -13,10 +13,11 @@
   const PHOTOS_LIST = ["http://o0.github.io/assets/images/tokyo/hotel1.jpg", "http://o0.github.io/assets/images/tokyo/hotel2.jpg", "http://o0.github.io/assets/images/tokyo/hotel3.jpg"];
   const PIN_FIELD_MIN_Y = 130;
   const PIN_FIELD_HEIGHT = 500;
+  window.domAdverts = [];
+  window.map = document.querySelector('.map');
 
   window.data = {
     adverts: [],
-    domAdverts: [],
     TYPES: ['bungalow', 'flat', 'house', 'palace'],
 
     getAdvertsList: function () {
@@ -53,9 +54,9 @@
 
     getDomAdverts: function () {
       for (let i = 0; i < this.adverts.length; i++) {
-        this.domAdverts.push(window.map.children[i + 1]);
+        window.domAdverts.push(window.map.children[i + 1]);
       }
-      return this.domAdverts;
-    },
+      return window.domAdverts;
+    }
   };
 })();
