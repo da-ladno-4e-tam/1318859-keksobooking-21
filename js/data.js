@@ -13,10 +13,13 @@
   const PHOTOS_LIST = ["http://o0.github.io/assets/images/tokyo/hotel1.jpg", "http://o0.github.io/assets/images/tokyo/hotel2.jpg", "http://o0.github.io/assets/images/tokyo/hotel3.jpg"];
   const PIN_FIELD_MIN_Y = 130;
   const PIN_FIELD_HEIGHT = 500;
+  window.domAdverts = [];
+  window.map = document.querySelector('.map');
 
   window.data = {
     adverts: [],
     TYPES: ['bungalow', 'flat', 'house', 'palace'],
+
     getAdvertsList: function () {
       for (let i = 0; i < NUMBER_OF_ADVERTS; i++) {
         const x = Math.floor(Math.random() * window.similarListElement.offsetWidth);
@@ -29,7 +32,7 @@
             title: TITLES[i],
             address: `${x}, ${y}`,
             price: window.utils.getRandomElement(PRICES),
-            type: window.utils.getRandomElement(this.TYPES),
+            type: window.utils.getRandomElement(window.data.TYPES),
             rooms: window.utils.getRandomElement(ROOMS),
             guests: window.utils.getRandomElement(GUESTS),
             checkin: window.utils.getRandomElement(CHECKIN_TIME),
@@ -44,9 +47,16 @@
           }
         };
 
-        this.adverts.push(advert);
+        window.data.adverts.push(advert);
       }
-      return this.adverts;
+      return window.data.adverts;
+    },
+
+    getDomAdverts: function () {
+      for (let i = 0; i < window.data.adverts.length; i++) {
+        window.domAdverts.push(window.map.children[i + 1]);
+      }
+      return window.domAdverts;
     }
   };
 })();
