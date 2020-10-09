@@ -32,7 +32,7 @@
             title: TITLES[i],
             address: `${x}, ${y}`,
             price: window.utils.getRandomElement(PRICES),
-            type: window.utils.getRandomElement(this.TYPES),
+            type: window.utils.getRandomElement(window.data.TYPES),
             rooms: window.utils.getRandomElement(ROOMS),
             guests: window.utils.getRandomElement(GUESTS),
             checkin: window.utils.getRandomElement(CHECKIN_TIME),
@@ -47,13 +47,13 @@
           }
         };
 
-        this.adverts.push(advert);
+        window.data.adverts.push(advert);
       }
-      return this.adverts;
+      return window.data.adverts;
     },
 
     getDomAdverts: function () {
-      for (let i = 0; i < this.adverts.length; i++) {
+      for (let i = 0; i < window.data.adverts.length; i++) {
         window.domAdverts.push(window.map.children[i + 1]);
       }
       return window.domAdverts;

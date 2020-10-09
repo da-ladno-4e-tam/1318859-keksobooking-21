@@ -21,15 +21,15 @@
   window.main = {
     setOnPinEvents: function (advertsArray) {
       for (let i = 0; i < advertsArray.length; i++) {
-        window.similarListElement.children[i].addEventListener('click', this.setOnPinClick(advertsArray[i]), false);
-        window.similarListElement.children[i].addEventListener('keydown', this.setOnPinEnterPress(advertsArray[i]), false);
+        window.similarListElement.children[i].addEventListener('click', window.main.setOnPinClick(advertsArray[i]), false);
+        window.similarListElement.children[i].addEventListener('keydown', window.main.setOnPinEnterPress(advertsArray[i]), false);
       }
     },
 
     setOnPopupEvents: function (advertsArray) {
       for (let i = 0; i < advertsArray.length; i++) {
-        advertsArray[i].querySelector('.popup__close').addEventListener('click', this.setOnPopupCloseClick(advertsArray[i]), false);
-        advertsArray[i].querySelector('.popup__close').addEventListener('keydown', this.setOnPopupCloseEnterPress(advertsArray[i]), false);
+        advertsArray[i].querySelector('.popup__close').addEventListener('click', window.main.setOnPopupCloseClick(advertsArray[i]), false);
+        advertsArray[i].querySelector('.popup__close').addEventListener('keydown', window.main.setOnPopupCloseEnterPress(advertsArray[i]), false);
       }
     },
 
@@ -42,16 +42,16 @@
       window.utils.getContent(window.pin.renderPin, window.data.adverts, window.similarListElement, 0);
       window.utils.getContent(window.card.renderPopup, window.data.adverts, window.map, 1);
       window.data.getDomAdverts();
-      this.setOnPinEvents(window.domAdverts);
-      this.setOnPopupEvents(window.domAdverts);
-      this.hideAllAdverts();
+      window.main.setOnPinEvents(window.domAdverts);
+      window.main.setOnPopupEvents(window.domAdverts);
+      window.main.hideAllAdverts();
       addressInput.setAttribute('value', `${activeMainPinX}, ${activeMainPinY}`);
     },
 
     hideAdvert: function (advert) {
       advert.classList.add('hidden');
-      advert.querySelector('.popup__close').removeEventListener('click', this.setOnPopupCloseClick(advert));
-      advert.querySelector('.popup__close').removeEventListener('keydown', this.setOnPopupCloseEnterPress(advert));
+      advert.querySelector('.popup__close').removeEventListener('click', window.main.setOnPopupCloseClick(advert));
+      advert.querySelector('.popup__close').removeEventListener('keydown', window.main.setOnPopupCloseEnterPress(advert));
     },
 
     setOnPopupCloseClick: function (advert) {
@@ -78,7 +78,7 @@
     },
 
     showAdvert: function (advert) {
-      this.hideAllAdverts();
+      window.main.hideAllAdverts();
       advert.classList.remove('hidden');
     },
 
@@ -102,8 +102,8 @@
     onMainPinClick: function (evt) {
       if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
         window.main.activateMap();
-        mainPin.removeEventListener('mousedown', this.onMainPinClick);
-        mainPin.removeEventListener('keydown', this.onMainPinClick);
+        mainPin.removeEventListener('mousedown', window.main.onMainPinClick);
+        mainPin.removeEventListener('keydown', window.main.onMainPinClick);
       }
     },
 
