@@ -1,20 +1,17 @@
 'use strict';
 
 (function () {
-  const MAIN_PIN_TIP = 22;
   const KEY_ENTER = 'Enter';
   const KEY_ESCAPE = 'Escape';
   const MOUSE_BUTTON_LEFT = 1;
   window.adForm = document.querySelector('.ad-form');
   window.similarListElement = window.map.querySelector('.map__pins');
-  const mainPin = window.map.querySelector('.map__pin--main');
+  window.mainPin = window.map.querySelector('.map__pin--main');
   const mapFilters = window.map.querySelector('.map__filters');
   const adFormFieldsets = window.adForm.querySelectorAll('fieldset');
-  const addressInput = window.adForm.querySelector('#address');
-  const noActiveMainPinX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
-  const noActiveMainPinY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
-  const activeMainPinX = noActiveMainPinX;
-  const activeMainPinY = noActiveMainPinY + MAIN_PIN_TIP;
+  window.addressInput = window.adForm.querySelector('#address');
+  window.noActiveMainPinX = Math.round(window.mainPin.offsetLeft + window.mainPin.offsetWidth / 2);
+  window.noActiveMainPinY = Math.round(window.mainPin.offsetTop + window.mainPin.offsetHeight / 2);
   const filterSelects = mapFilters.querySelectorAll('select');
   const filterFieldsets = mapFilters.querySelectorAll('fieldset');
 
@@ -45,7 +42,6 @@
       window.main.setOnPinEvents(window.domAdverts);
       window.main.setOnPopupEvents(window.domAdverts);
       window.main.hideAllAdverts();
-      addressInput.setAttribute('value', `${activeMainPinX}, ${activeMainPinY}`);
     },
 
     hideAdvert: function (advert) {
@@ -102,8 +98,7 @@
     onMainPinClick: function (evt) {
       if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
         window.main.activateMap();
-        mainPin.removeEventListener('mousedown', window.main.onMainPinClick);
-        mainPin.removeEventListener('keydown', window.main.onMainPinClick);
+        window.mainPin.removeEventListener('keydown', window.main.onMainPinClick);
       }
     },
 
@@ -118,10 +113,10 @@
     window.utils.disableElementsInArray(filterSelects, true);
     window.utils.disableElementsInArray(filterFieldsets, true);
     window.utils.disableElementsInArray(adFormFieldsets, true);
-    addressInput.setAttribute('value', `${noActiveMainPinX}, ${noActiveMainPinY}`);
-    addressInput.setAttribute('readonly', `true`);
+    window.addressInput.setAttribute('value', `${window.noActiveMainPinX}, ${window.noActiveMainPinY}`);
+    window.addressInput.setAttribute('readonly', `true`);
   });
 
-  mainPin.addEventListener('mousedown', window.main.onMainPinClick);
-  mainPin.addEventListener('keydown', window.main.onMainPinClick);
+  window.mainPin.addEventListener('mousedown', window.main.onMainPinClick);
+  window.mainPin.addEventListener('keydown', window.main.onMainPinClick);
 })();

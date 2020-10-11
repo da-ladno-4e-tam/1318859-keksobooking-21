@@ -11,8 +11,8 @@
   const FEATURES_LIST = ["wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"];
   const DESCRIPTIONS = ['Описание1', 'Описание2', 'Описание3', 'Описание4', 'Описание5', 'Описание6', 'Описание7', 'Описание8'];
   const PHOTOS_LIST = ["http://o0.github.io/assets/images/tokyo/hotel1.jpg", "http://o0.github.io/assets/images/tokyo/hotel2.jpg", "http://o0.github.io/assets/images/tokyo/hotel3.jpg"];
-  const PIN_FIELD_MIN_Y = 130;
-  const PIN_FIELD_HEIGHT = 500;
+  window.PIN_FIELD_MIN_Y = 130;
+  window.PIN_FIELD_HEIGHT = 500;
   window.domAdverts = [];
   window.map = document.querySelector('.map');
 
@@ -23,7 +23,7 @@
     getAdvertsList: function () {
       for (let i = 0; i < NUMBER_OF_ADVERTS; i++) {
         const x = Math.floor(Math.random() * window.similarListElement.offsetWidth);
-        const y = Math.floor(Math.random() * PIN_FIELD_HEIGHT) + PIN_FIELD_MIN_Y;
+        const y = Math.floor(Math.random() * window.PIN_FIELD_HEIGHT) + window.PIN_FIELD_MIN_Y;
         const advert = {
           author: {
             avatar: `img/avatars/user0${i + 1}.png`
