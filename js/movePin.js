@@ -2,19 +2,23 @@
 
 (function () {
   const MAIN_PIN_TIP = 22;
-  const MainPinHeight = window.mainPin.offsetHeight + MAIN_PIN_TIP;
+  const MainPinHeight = window.main.mainPin.offsetHeight + MAIN_PIN_TIP;
 
-  window.mainPin.addEventListener('mousedown', function (evt) {
+  function fillAddress(currentX, currentY) {
+    window.main.addressInput.setAttribute('value', `${currentX}, ${currentY}`);
+  }
+
+  window.main.mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
     let startCoords = {
       x: evt.clientX,
       y: evt.clientY
     };
-    let activeMainPinX = Math.round(window.mainPin.offsetLeft + window.mainPin.offsetWidth / 2);
-    let activeMainPinY = Math.round(window.mainPin.offsetTop + MainPinHeight);
+    let activeMainPinX = Math.round(window.main.mainPin.offsetLeft + window.main.mainPin.offsetWidth / 2);
+    let activeMainPinY = Math.round(window.main.mainPin.offsetTop + MainPinHeight);
 
-    window.addressInput.setAttribute('value', `${activeMainPinX}, ${activeMainPinY}`);
+    window.main.addressInput.setAttribute('value', `${activeMainPinX}, ${activeMainPinY}`);
 
     function onMouseMove(moveEvt) {
       moveEvt.preventDefault();
@@ -26,31 +30,33 @@
       const currentX = activeMainPinX - shift.x;
       const currentY = activeMainPinY - shift.y;
 
-      activeMainPinX = Math.round(window.mainPin.offsetLeft + window.mainPin.offsetWidth / 2);
-      activeMainPinY = Math.round(window.mainPin.offsetTop + MainPinHeight);
+      activeMainPinX = Math.round(window.main.mainPin.offsetLeft + window.main.mainPin.offsetWidth / 2);
+      activeMainPinY = Math.round(window.main.mainPin.offsetTop + MainPinHeight);
       startCoords = {
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
 
-      window.mainPin.style.top = (window.mainPin.offsetTop - shift.y) + 'px';
-      window.mainPin.style.left = (window.mainPin.offsetLeft - shift.x) + 'px';
-      window.addressInput.setAttribute('value', `${currentX}, ${currentY}`);
+      window.main.mainPin.style.top = (window.main.mainPin.offsetTop - shift.y) + 'px';
+      window.main.mainPin.style.left = (window.main.mainPin.offsetLeft - shift.x) + 'px';
+      fillAddress(currentX, currentY);
 
       if (currentX <= 0) {
-        window.mainPin.style.left = (-window.mainPin.offsetWidth / 2) + 'px';
-        window.addressInput.setAttribute('value', `${0}, ${currentY}`);
-      } else if (currentX >= window.similarListElement.offsetWidth) {
-        window.mainPin.style.left = (window.similarListElement.offsetWidth - window.mainPin.offsetWidth / 2) + 'px';
-        window.addressInput.setAttribute('value', `${window.similarListElement.offsetWidth}, ${currentY}`);
+        window.main.mainPin.style.left = `${-window.main.mainPin.offsetWidth / 2}px`;
+        fillAddress(0, currentY);
+      }
+      if (currentX >= window.main.similarListElement.offsetWidth) {
+        window.main.mainPin.style.left = `${window.main.similarListElement.offsetWidth - window.main.mainPin.offsetWidth / 2}px`;
+        fillAddress(window.main.similarListElement.offsetWidth, currentY);
       }
 
-      if (currentY <= window.PIN_FIELD_MIN_Y + MainPinHeight) {
-        window.mainPin.style.top = `${window.PIN_FIELD_MIN_Y}px`;
-        window.addressInput.setAttribute('value', `${currentX}, ${MainPinHeight + window.PIN_FIELD_MIN_Y}`);
-      } else if (currentY >= MainPinHeight + window.PIN_FIELD_MIN_Y + window.PIN_FIELD_HEIGHT) {
-        window.mainPin.style.top = `${window.PIN_FIELD_MIN_Y + window.PIN_FIELD_HEIGHT}px`;
-        window.addressInput.setAttribute('value', `${currentX}, ${MainPinHeight + window.PIN_FIELD_MIN_Y + window.PIN_FIELD_HEIGHT}`);
+      if (currentY <= window.data.PIN_FIELD_MIN_Y) {
+        window.main.mainPin.style.top = `${window.data.PIN_FIELD_MIN_Y - MainPinHeight}px`;
+        fillAddress(currentX, window.data.PIN_FIELD_MIN_Y);
+      }
+      if (currentY >= window.data.PIN_FIELD_MIN_Y + window.data.PIN_FIELD_HEIGHT) {
+        window.main.mainPin.style.top = `${window.data.PIN_FIELD_MIN_Y + window.data.PIN_FIELD_HEIGHT - MainPinHeight}px`;
+        fillAddress(currentX, window.data.PIN_FIELD_MIN_Y + window.data.PIN_FIELD_HEIGHT);
       }
     }
 
