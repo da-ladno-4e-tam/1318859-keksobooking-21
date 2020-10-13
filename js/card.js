@@ -49,7 +49,11 @@
       popupElement.querySelector('.popup__text--time').textContent = `Заезд после ${advert.offer.checkin}, выезд до ${advert.offer.checkout}`;
 
       for (let i = 0; i < featuresList.children.length; i++) {
-        window.card.hideUnusualFeatures(featuresList.children[i], advert.offer.features);
+        if (advert.offer.features.length < 1) {
+          featuresList.style = 'display: none';
+        } else {
+          window.card.hideUnusualFeatures(featuresList.children[i], advert.offer.features);
+        }
       }
 
       popupElement.querySelector('.popup__description').textContent = advert.offer.description;

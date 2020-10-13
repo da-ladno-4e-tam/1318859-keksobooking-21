@@ -95,8 +95,6 @@
   capacityInput.addEventListener('input', window.form.validateCapacity);
   roomNumberInput.addEventListener('input', window.form.validateCapacity);
 
-  window.data.getAdvertsList();
-
   window.form.validatePicture(avatarInput);
   window.form.validatePicture(imagesInput);
 })();

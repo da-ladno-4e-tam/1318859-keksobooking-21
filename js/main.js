@@ -23,8 +23,8 @@
 
     setOnPinEvents: function (advertsArray) {
       for (let i = 0; i < advertsArray.length; i++) {
-        window.main.similarListElement.children[i].addEventListener('click', window.main.setOnPinClick(advertsArray[i]), false);
-        window.main.similarListElement.children[i].addEventListener('keydown', window.main.setOnPinEnterPress(advertsArray[i]), false);
+        window.main.similarListElement.children[i].addEventListener('click', window.main.setOnPinClick(advertsArray[i], window.main.similarListElement.children[i]), false);
+        window.main.similarListElement.children[i].addEventListener('keydown', window.main.setOnPinEnterPress(advertsArray[i], window.main.similarListElement.children[i]), false);
       }
     },
 
@@ -41,12 +41,29 @@
       window.utils.disableElementsInArray(filterSelects, false);
       window.utils.disableElementsInArray(filterFieldsets, false);
       window.utils.disableElementsInArray(window.main.adFieldsets, false);
-      window.utils.getContent(window.pin.renderPin, window.data.adverts, window.main.similarListElement, 0);
-      window.utils.getContent(window.card.renderPopup, window.data.adverts, window.data.map, 1);
+      window.backend.load(window.main.onLoad, window.main.onError);
+    },
+
+    onLoad: function (adverts) {
+      window.utils.getContent(window.pin.renderPin, adverts, window.main.similarListElement, 0);
+      window.utils.getContent(window.card.renderPopup, adverts, window.data.map, 1);
       window.data.getDomAdverts();
       window.main.setOnPinEvents(window.data.domAdverts);
       window.main.setOnPopupEvents(window.data.domAdverts);
       window.main.hideAllAdverts();
+    },
+
+    onError: function (errorMessage) {
+      const node = document.createElement('div');
+      node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: yellow;';
+      node.style.position = 'absolute';
+      node.style.left = 0;
+      node.style.bottom = '46px';
+      node.style.right = 0;
+      node.style.fontSize = '28px';
+
+      node.textContent = errorMessage;
+      window.data.map.insertAdjacentElement('afterbegin', node);
     },
 
     hideAdvert: function (advert) {
@@ -83,18 +100,26 @@
       advert.classList.remove('hidden');
     },
 
-    setOnPinClick: function (advert) {
+    setOnPinClick: function (advert, pin) {
       return function () {
         window.main.showAdvert(advert);
+        for (let i = 0; i < window.data.NUMBER_OF_ADVERTS; i++) {
+          window.main.similarListElement.children[i].classList.remove('map__pin--active');
+        }
+        pin.classList.add('map__pin--active');
         document.addEventListener('keydown', window.main.onPopupEscPress);
       };
     },
 
-    setOnPinEnterPress: function (advert) {
+    setOnPinEnterPress: function (advert, pin) {
       return function (evt) {
         if (evt.key === KEY_ENTER) {
           evt.preventDefault();
           window.main.showAdvert(advert);
+          for (let i = 0; i < window.data.NUMBER_OF_ADVERTS; i++) {
+            window.main.similarListElement.children[i].classList.remove('map__pin--active');
+          }
+          pin.classList.add('map__pin--active');
         }
         document.addEventListener('keydown', window.main.onPopupEscPress);
       };
@@ -108,7 +133,7 @@
     },
 
     hideAllAdverts: function () {
-      for (let j = 0; j < window.data.adverts.length; j++) {
+      for (let j = 0; j < window.data.NUMBER_OF_ADVERTS; j++) {
         window.data.map.children[j + 1].classList.add('hidden');
       }
     }
