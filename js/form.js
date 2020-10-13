@@ -6,16 +6,16 @@
   const MAX_TITLE_LENGTH = 100;
   const MAX_PRICE = 1000000;
   const REGULAR_FOR_IMAGES = /\.(jpeg|jpg|png|webp)$/;
-  const avatarInput = window.adForm.querySelector('#avatar');
-  const imagesInput = window.adForm.querySelector('#images');
-  const titleInput = window.adForm.querySelector('#title');
-  const typeInput = window.adForm.querySelector('#type');
-  const priceInput = window.adForm.querySelector('#price');
-  const timeInInput = window.adForm.querySelector('#timein');
-  const timeOutInput = window.adForm.querySelector('#timeout');
-  const roomNumberInput = window.adForm.querySelector('#room_number');
+  const avatarInput = window.main.adForm.querySelector('#avatar');
+  const imagesInput = window.main.adForm.querySelector('#images');
+  const titleInput = window.main.adForm.querySelector('#title');
+  const typeInput = window.main.adForm.querySelector('#type');
+  const priceInput = window.main.adForm.querySelector('#price');
+  const timeInInput = window.main.adForm.querySelector('#timein');
+  const timeOutInput = window.main.adForm.querySelector('#timeout');
+  const roomNumberInput = window.main.adForm.querySelector('#room_number');
   const roomNumberOneHundred = roomNumberInput.querySelector('option[value = "100"]');
-  const capacityInput = window.adForm.querySelector('#capacity');
+  const capacityInput = window.main.adForm.querySelector('#capacity');
   const customValidities = {
     title: {
       minLength: `Заголовок должен быть не меньше ${MIN_TITLE_LENGTH} симв.`,
