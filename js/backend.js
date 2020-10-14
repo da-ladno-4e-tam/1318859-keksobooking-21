@@ -4,7 +4,7 @@
   const StatusCode = {
     OK: 200
   };
-  const TIMEOUT = 3000;
+  const TIMEOUT = 10000;
   const xhr = new XMLHttpRequest();
 
   window.backend = {
@@ -17,6 +17,7 @@
       xhr.addEventListener('load', function () {
         if (xhr.status === StatusCode.OK) {
           onLoad(xhr.response);
+
         } else {
           onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
         }
