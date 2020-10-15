@@ -4,16 +4,27 @@
   const KEY_ENTER = 'Enter';
   const KEY_ESCAPE = 'Escape';
   const MOUSE_BUTTON_LEFT = 1;
-  const mapFilters = window.data.map.querySelector('.map__filters');
+  const map = document.querySelector('.map');
+  const mapFilters = map.querySelector('.map__filters');
   const filterSelects = mapFilters.querySelectorAll('select');
   const filterFieldsets = mapFilters.querySelectorAll('fieldset');
   const adForm = document.querySelector('.ad-form');
   const adFormFieldsets = adForm.querySelectorAll('fieldset');
   const addressInput = adForm.querySelector('#address');
-  const mainPin = window.data.map.querySelector('.map__pin--main');
-  const similarListElement = window.data.map.querySelector('.map__pins');
+  const mainPin = map.querySelector('.map__pin--main');
+  const similarListElement = map.querySelector('.map__pins');
   const noActiveMainPinX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
   const noActiveMainPinY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
+  let domAdverts = [];
+
+  function getDomAdverts(adverts) {
+
+    adverts.forEach(function (item, i) {
+      domAdverts.push(map.children[i + 1]);
+    });
+
+    return domAdverts;
+  }
 
   function onMainPinClick(evt) {
     if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
@@ -23,7 +34,7 @@
   }
 
   function activateMap() {
-    window.data.map.classList.remove('map--faded');
+    map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     window.utils.disableElementsInArray(filterSelects, false);
     window.utils.disableElementsInArray(filterFieldsets, false);
@@ -33,10 +44,10 @@
 
   function onLoad(adverts) {
     window.utils.getContent(window.pin.renderPin, adverts, similarListElement, 0);
-    window.utils.getContent(window.card.renderPopup, adverts, window.data.map, 1);
-    window.data.getDomAdverts();
-    setOnPinEvents(window.data.domAdverts);
-    setOnPopupEvents(window.data.domAdverts);
+    window.utils.getContent(window.card.renderPopup, adverts, map, 1);
+    getDomAdverts(adverts);
+    setOnPinEvents(domAdverts);
+    setOnPopupEvents(domAdverts);
     hideAllAdverts();
   }
 
@@ -50,7 +61,7 @@
     node.style.fontSize = '28px';
 
     node.textContent = errorMessage;
-    window.data.map.insertAdjacentElement('afterbegin', node);
+    map.insertAdjacentElement('afterbegin', node);
   }
 
   function setOnPinEvents(advertsArray) {
@@ -68,13 +79,13 @@
   }
 
   function hideAllAdverts() {
-    window.backend.xhr.response.forEach(function (item, i) {
-      window.data.map.children[i + 1].classList.add('hidden');
+    domAdverts.forEach(function (item, i) {
+      map.children[i + 1].classList.add('hidden');
     });
   }
 
   function deactivatePins() {
-    window.backend.xhr.response.forEach(function (item, i) {
+    domAdverts.forEach(function (item, i) {
       similarListElement.children[i].classList.remove('map__pin--active');
     });
   }
@@ -137,13 +148,14 @@
     }
   }
 
-  window.addEventListener('load', function () {
+  function deactivateForm() {
     window.utils.disableElementsInArray(filterSelects, true);
     window.utils.disableElementsInArray(filterFieldsets, true);
     window.utils.disableElementsInArray(adFormFieldsets, true);
     addressInput.setAttribute('value', `${noActiveMainPinX}, ${noActiveMainPinY}`);
-    addressInput.setAttribute('readonly', `true`);
-  });
+  }
+
+  deactivateForm();
 
   mainPin.addEventListener('mousedown', onMainPinClick);
   mainPin.addEventListener('keydown', onMainPinClick);
