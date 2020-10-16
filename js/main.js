@@ -12,7 +12,6 @@
   const adForm = document.querySelector('.ad-form');
   const adFormFieldsets = adForm.querySelectorAll('fieldset');
   const addressInput = adForm.querySelector('#address');
-  const submitButton = adForm.querySelector('.ad-form__submit');
   const resetButton = adForm.querySelector('.ad-form__reset');
   const mainPin = map.querySelector('.map__pin--main');
   const similarListElement = map.querySelector('.map__pins');
@@ -229,7 +228,9 @@
 
     document.addEventListener('click', onFormMessageClick);
     document.addEventListener('keydown', onFormMessageEscPress);
-    mainContainer.querySelector('.error__button').addEventListener('mousedown', onFormMessageClick);
+    if (template === errorTemplate) {
+      mainContainer.querySelector('.error__button').addEventListener('mousedown', onFormMessageClick);
+    }
   }
 
   function renderFormMessage(template) {
@@ -255,7 +256,7 @@
   mainPin.addEventListener('mousedown', onMainPinClick);
   mainPin.addEventListener('keydown', onMainPinClick);
 
-  submitButton.addEventListener('click', onSubmit);
+  adForm.addEventListener('submit', onSubmit);
 
   resetButton.addEventListener('click', deactivateMap);
 
