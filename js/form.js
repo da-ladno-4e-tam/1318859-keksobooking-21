@@ -26,30 +26,28 @@
     images: `Выберите изображение формата "jpeg", "jpg", "webp" или "png"`
   };
 
-  window.form = {
-    validateCapacity: function () {
-      const capacityValue = Number(capacityInput.value);
-      const roomsValue = Number(roomNumberInput.value);
-      if ((capacityValue > roomsValue) || (roomsValue === Number(roomNumberOneHundred.value) && capacityValue !== roomsValue)) {
-        capacityInput.setCustomValidity(customValidities.capacity);
-      } else {
-        capacityInput.setCustomValidity('');
-      }
-      capacityInput.reportValidity();
-    },
-
-    validatePicture: function (element) {
-      element.addEventListener('input', function () {
-        const path = element.value;
-        if (REGULAR_FOR_IMAGES.test(path)) {
-          element.setCustomValidity('');
-        } else {
-          element.setCustomValidity(customValidities.images);
-        }
-        element.reportValidity();
-      });
+  function validateCapacity() {
+    const capacityValue = Number(capacityInput.value);
+    const roomsValue = Number(roomNumberInput.value);
+    if ((capacityValue > roomsValue) || (roomsValue === Number(roomNumberOneHundred.value) && capacityValue !== roomsValue)) {
+      capacityInput.setCustomValidity(customValidities.capacity);
+    } else {
+      capacityInput.setCustomValidity('');
     }
-  };
+    capacityInput.reportValidity();
+  }
+
+  function validatePicture(element) {
+    element.addEventListener('input', function () {
+      const path = element.value;
+      if (REGULAR_FOR_IMAGES.test(path)) {
+        element.setCustomValidity('');
+      } else {
+        element.setCustomValidity(customValidities.images);
+      }
+      element.reportValidity();
+    });
+  }
 
   titleInput.addEventListener('input', function () {
     const titleValueLength = titleInput.value.length;
@@ -76,8 +74,8 @@
   });
 
   typeInput.addEventListener('input', function () {
-    for (let i = 0; i < window.data.TYPES.length; i++) {
-      if (typeInput.value === window.data.TYPES[i]) {
+    for (let i = 0; i < window.card.TYPES.length; i++) {
+      if (typeInput.value === window.card.TYPES[i]) {
         priceInput.setAttribute('min', `${MIN_TYPE_PRICE[i]}`);
         priceInput.placeholder = `${MIN_TYPE_PRICE[i]}`;
       }
@@ -92,11 +90,10 @@
     timeInInput.value = timeOutInput.value;
   });
 
-  capacityInput.addEventListener('input', window.form.validateCapacity);
-  roomNumberInput.addEventListener('input', window.form.validateCapacity);
+  capacityInput.addEventListener('input', validateCapacity);
+  roomNumberInput.addEventListener('input', validateCapacity);
 
-  window.data.getAdvertsList();
+  validatePicture(avatarInput);
+  validatePicture(imagesInput);
 
-  window.form.validatePicture(avatarInput);
-  window.form.validatePicture(imagesInput);
 })();
