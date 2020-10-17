@@ -188,22 +188,34 @@
     }
   }
 
-  function deactivateMap() {
-    map.classList.add('map--faded');
+  function disableForm() {
     adForm.classList.add('ad-form--disabled');
-    mainPin.style.left = '570px';
-    mainPin.style.top = '375px';
     window.utils.disableElementsInArray(filterSelects, true);
     window.utils.disableElementsInArray(filterFieldsets, true);
     window.utils.disableElementsInArray(adFormFieldsets, true);
-    mapFilters.reset();
-    adForm.reset();
     deactivateForm();
+    adForm.reset();
+  }
+
+  function moveMainPinToStart() {
+    mainPin.style.left = '570px';
+    mainPin.style.top = '375px';
+  }
+
+  function setMainPinEvents() {
+    mainPin.addEventListener('mousedown', onMainPinSecondClick);
+    mainPin.addEventListener('keydown', onMainPinSecondClick);
+  }
+
+  function deactivateMap() {
+    map.classList.add('map--faded');
+    mapFilters.reset();
+    moveMainPinToStart();
+    disableForm();
     hideAllAdverts();
     hidePins();
     deactivatePins();
-    mainPin.addEventListener('mousedown', onMainPinSecondClick);
-    mainPin.addEventListener('keydown', onMainPinSecondClick);
+    setMainPinEvents();
   }
 
   function onSubmit(evt) {
