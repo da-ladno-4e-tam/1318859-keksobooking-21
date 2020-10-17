@@ -1,8 +1,25 @@
 'use strict';
 
 (function () {
-  const TYPES = ['bungalow', 'flat', 'house', 'palace'];
-  const TYPES_LOCAL = ['Дворец', 'Квартира', 'Дом', 'Бунгало'];
+  const TYPES_OF_HOUSE = {
+    'bungalow': {
+      LOCAL_NAME: 'Бунгало',
+      MIN_PRICE: 0
+    },
+    'flat': {
+      LOCAL_NAME: 'Квартира',
+      MIN_PRICE: 1000
+    },
+    'house': {
+      LOCAL_NAME: 'Дом',
+      MIN_PRICE: 5000
+    },
+    'palace': {
+      LOCAL_NAME: 'Дворец',
+      MIN_PRICE: 10000
+    }
+  };
+
   const similarPopupTemplate = document.querySelector('#card').content.querySelector('.popup');
 
   function hideUnusualFeatures(feature, features) {
@@ -38,13 +55,7 @@
     popupElement.querySelector('.popup__title').textContent = advert.offer.title;
     popupElement.querySelector('.popup__text--address').textContent = advert.offer.address;
     popupElement.querySelector('.popup__text--price').innerHTML = `${advert.offer.price}&#x20bd;<span>/ночь</span>`;
-
-    for (let i = 0; i < TYPES.length; i++) {
-      if (advert.offer.type === TYPES[i]) {
-        popupElement.querySelector('.popup__type').textContent = TYPES_LOCAL[i];
-      }
-    }
-
+    popupElement.querySelector('.popup__type').textContent = TYPES_OF_HOUSE[advert.offer.type].LOCAL_NAME;
     popupElement.querySelector('.popup__text--capacity').textContent = `${advert.offer.rooms} комнаты для ${advert.offer.guests} гостей`;
     popupElement.querySelector('.popup__text--time').textContent = `Заезд после ${advert.offer.checkin}, выезд до ${advert.offer.checkout}`;
 
@@ -65,9 +76,8 @@
     return popupElement;
   }
 
-
   window.card = {
-    TYPES: TYPES,
+    TYPES_OF_HOUSE: TYPES_OF_HOUSE,
     renderPopup: renderPopup
   };
 })();
