@@ -49,7 +49,7 @@
     });
   }
 
-  titleInput.addEventListener('input', function () {
+  function validateTitle() {
     const titleValueLength = titleInput.value.length;
 
     if (titleValueLength < MIN_TITLE_LENGTH) {
@@ -61,9 +61,9 @@
     }
 
     titleInput.reportValidity();
-  });
+  }
 
-  priceInput.addEventListener('input', function () {
+  function validatePrice() {
     if (priceInput.value > MAX_PRICE) {
       priceInput.setCustomValidity(customValidities.price);
     } else {
@@ -71,7 +71,16 @@
     }
 
     priceInput.reportValidity();
-  });
+  }
+
+  function validateForm() {
+    validateTitle();
+    validatePrice();
+    validateCapacity();
+    validatePicture(avatarInput);
+    validatePicture(imagesInput);
+    // return true;
+  }
 
   typeInput.addEventListener('input', function () {
     for (let i = 0; i < window.card.TYPES.length; i++) {
@@ -90,10 +99,15 @@
     timeInInput.value = timeOutInput.value;
   });
 
+  titleInput.addEventListener('input', validateTitle);
+  priceInput.addEventListener('input', validatePrice);
   capacityInput.addEventListener('input', validateCapacity);
   roomNumberInput.addEventListener('input', validateCapacity);
 
   validatePicture(avatarInput);
   validatePicture(imagesInput);
 
+  window.form = {
+    validateForm: validateForm
+  };
 })();
