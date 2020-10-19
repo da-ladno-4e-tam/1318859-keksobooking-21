@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  const MIN_TYPE_PRICE = [0, 1000, 5000, 10000];
   const MIN_TITLE_LENGTH = 30;
   const MAX_TITLE_LENGTH = 100;
   const MAX_PRICE = 1000000;
@@ -73,22 +72,9 @@
     priceInput.reportValidity();
   }
 
-  function validateForm() {
-    validateTitle();
-    validatePrice();
-    validateCapacity();
-    validatePicture(avatarInput);
-    validatePicture(imagesInput);
-    // return true;
-  }
-
   typeInput.addEventListener('input', function () {
-    for (let i = 0; i < window.card.TYPES.length; i++) {
-      if (typeInput.value === window.card.TYPES[i]) {
-        priceInput.setAttribute('min', `${MIN_TYPE_PRICE[i]}`);
-        priceInput.placeholder = `${MIN_TYPE_PRICE[i]}`;
-      }
-    }
+    priceInput.setAttribute('min', `${window.card.TYPES_OF_HOUSE[typeInput.value].MIN_PRICE}`);
+    priceInput.placeholder = `${window.card.TYPES_OF_HOUSE[typeInput.value].MIN_PRICE}`;
   });
 
   timeInInput.addEventListener('input', function () {
@@ -106,8 +92,4 @@
 
   validatePicture(avatarInput);
   validatePicture(imagesInput);
-
-  window.form = {
-    validateForm: validateForm
-  };
 })();

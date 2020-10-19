@@ -4,6 +4,7 @@
   const KEY_ENTER = 'Enter';
   const KEY_ESCAPE = 'Escape';
   const MOUSE_BUTTON_LEFT = 1;
+  const MAX_SIMILAR_ADVERT_COUNT = 5;
   const map = document.querySelector('.map');
   const mainContainer = document.querySelector('main');
   const mapFilters = map.querySelector('.map__filters');
@@ -17,17 +18,57 @@
   const similarListElement = map.querySelector('.map__pins');
   const noActiveMainPinX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
   const noActiveMainPinY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
-
   const successTemplate = document.querySelector('#success').content.querySelector('.success');
   const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  const filterOfType = mapFilters.querySelector('#housing-type');
   let domAdverts = [];
+  let adverts = [];
+  let filteredAdverts = [];
+  let typeOfHouse = 'any';
 
-  function getDomAdverts(adverts) {
-
-    adverts.forEach(function (item, i) {
-      domAdverts.push(map.children[i + 1]);
+  function filterAdverts() {
+    const sameTypeOfHouseAdverts = adverts.filter(function (advert) {
+      if (typeOfHouse === 'any') {
+        return adverts;
+      } else {
+        return advert.offer.type === typeOfHouse;
+      }
     });
 
+    const concatedAdverts = sameTypeOfHouseAdverts;
+
+    if (concatedAdverts.length > MAX_SIMILAR_ADVERT_COUNT) {
+      for (let i = 0; i < MAX_SIMILAR_ADVERT_COUNT; i++) {
+        filteredAdverts.push(concatedAdverts[i]);
+      }
+    } else {
+      filteredAdverts = concatedAdverts;
+    }
+  }
+
+  function updateAdverts() {
+    filterAdverts();
+    window.utils.getContent(window.pin.renderPin, filteredAdverts, similarListElement, 0);
+    window.utils.getContent(window.card.renderPopup, filteredAdverts, map, 1);
+    getDomAdverts(filteredAdverts);
+    setOnPinEvents(domAdverts);
+    setOnPopupEvents(domAdverts);
+    hideAllAdverts();
+  }
+
+  function clearAdverts() {
+    for (let i = filteredAdverts.length - 1; i >= 0; i--) {
+      similarListElement.children[i].parentNode.removeChild(similarListElement.children[i]);
+      map.children[i + 1].parentNode.removeChild(map.children[i + 1]);
+    }
+    filteredAdverts = [];
+    domAdverts = [];
+  }
+
+  function getDomAdverts(arr) {
+    for (let i = 0; i < arr.length; i++) {
+      domAdverts.push(map.children[i + 1]);
+    }
     return domAdverts;
   }
 
@@ -48,8 +89,6 @@
   function activateMap() {
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
-    window.utils.disableElementsInArray(filterSelects, false);
-    window.utils.disableElementsInArray(filterFieldsets, false);
     window.utils.disableElementsInArray(adFormFieldsets, false);
     window.backend.load(onLoad, onError);
   }
@@ -63,13 +102,11 @@
     showPins();
   }
 
-  function onLoad(adverts) {
-    window.utils.getContent(window.pin.renderPin, adverts, similarListElement, 0);
-    window.utils.getContent(window.card.renderPopup, adverts, map, 1);
-    getDomAdverts(adverts);
-    setOnPinEvents(domAdverts);
-    setOnPopupEvents(domAdverts);
-    hideAllAdverts();
+  function onLoad(data) {
+    window.utils.disableElementsInArray(filterSelects, false);
+    window.utils.disableElementsInArray(filterFieldsets, false);
+    adverts = data;
+    updateAdverts();
   }
 
   function onError(errorMessage) {
@@ -188,22 +225,37 @@
     }
   }
 
-  function deactivateMap() {
-    map.classList.add('map--faded');
+  function disableForm() {
     adForm.classList.add('ad-form--disabled');
-    mainPin.style.left = '570px';
-    mainPin.style.top = '375px';
     window.utils.disableElementsInArray(filterSelects, true);
     window.utils.disableElementsInArray(filterFieldsets, true);
     window.utils.disableElementsInArray(adFormFieldsets, true);
-    mapFilters.reset();
-    adForm.reset();
     deactivateForm();
+    adForm.reset();
+  }
+
+  function moveMainPinToStart() {
+    mainPin.style.left = '570px';
+    mainPin.style.top = '375px';
+  }
+
+  function setMainPinEvents() {
+    mainPin.addEventListener('mousedown', onMainPinSecondClick);
+    mainPin.addEventListener('keydown', onMainPinSecondClick);
+  }
+
+  function deactivateMap() {
+    map.classList.add('map--faded');
+    mapFilters.reset();
+    clearAdverts();
+    typeOfHouse = 'any';
+    updateAdverts();
+    moveMainPinToStart();
+    disableForm();
     hideAllAdverts();
     hidePins();
     deactivatePins();
-    mainPin.addEventListener('mousedown', onMainPinSecondClick);
-    mainPin.addEventListener('keydown', onMainPinSecondClick);
+    setMainPinEvents();
   }
 
   function onSubmit(evt) {
@@ -260,11 +312,18 @@
 
   resetButton.addEventListener('click', deactivateMap);
 
+
+  filterOfType.addEventListener('change', function () {
+    typeOfHouse = filterOfType.value;
+    clearAdverts();
+    updateAdverts();
+  });
+
   window.main = {
     adForm: adForm,
     similarListElement: similarListElement,
     mainPin: mainPin,
-    addressInput: addressInput,
+    addressInput: addressInput
   };
 
 })();
