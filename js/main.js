@@ -5,6 +5,25 @@
   const KEY_ESCAPE = 'Escape';
   const MOUSE_BUTTON_LEFT = 1;
   const MAX_SIMILAR_ADVERT_COUNT = 5;
+  const MAX_PRICE = 1000000;
+  const PRICE_VALUES = {
+    'any': {
+      MIN_COST: 0,
+      MAX_COST: MAX_PRICE
+    },
+    'low': {
+      MIN_COST: 0,
+      MAX_COST: 10000
+    },
+    'middle': {
+      MIN_COST: 10000,
+      MAX_COST: 50000
+    },
+    'high': {
+      MIN_COST: 50000,
+      MAX_COST: Infinity
+    }
+  };
   const map = document.querySelector('.map');
   const mainContainer = document.querySelector('main');
   const mapFilters = map.querySelector('.map__filters');
@@ -21,10 +40,21 @@
   const successTemplate = document.querySelector('#success').content.querySelector('.success');
   const errorTemplate = document.querySelector('#error').content.querySelector('.error');
   const filterOfType = mapFilters.querySelector('#housing-type');
+  const filterOfPrice = mapFilters.querySelector('#housing-price');
+  const filterOfRooms = mapFilters.querySelector('#housing-rooms');
+  const filterOfGuests = mapFilters.querySelector('#housing-guests');
   let domAdverts = [];
   let adverts = [];
   let filteredAdverts = [];
   let typeOfHouse = 'any';
+  let price = 'any';
+  let numberOfRooms = 'any';
+  let numberOfGuests = 'any';
+
+
+  function intersectArrays(array, subArray) {
+    return array.filter(item => subArray.includes(item));
+  }
 
   function filterAdverts() {
     const sameTypeOfHouseAdverts = adverts.filter(function (advert) {
@@ -35,14 +65,40 @@
       }
     });
 
-    const concatedAdverts = sameTypeOfHouseAdverts;
+    const samePriceAdverts = adverts.filter(function (advert) {
+      if (price === 'any') {
+        return adverts;
+      } else {
+        return (advert.offer.price > PRICE_VALUES[price].MIN_COST && advert.offer.price <= PRICE_VALUES[price].MAX_COST);
+      }
+    });
 
-    if (concatedAdverts.length > MAX_SIMILAR_ADVERT_COUNT) {
+    const sameTypeOfRoomsAdverts = adverts.filter(function (advert) {
+      if (numberOfRooms === 'any') {
+        return adverts;
+      } else {
+        return advert.offer.rooms == numberOfRooms;
+      }
+    });
+
+    const sameTypeOfGuestsAdverts = adverts.filter(function (advert) {
+      if (numberOfGuests === 'any') {
+        return adverts;
+      } else {
+        return advert.offer.guests == numberOfGuests;
+      }
+    });
+
+    let resultAdverts = intersectArrays(sameTypeOfHouseAdverts, samePriceAdverts);
+    resultAdverts = intersectArrays(resultAdverts, sameTypeOfRoomsAdverts);
+    resultAdverts = intersectArrays(resultAdverts, sameTypeOfGuestsAdverts);
+
+    if (resultAdverts.length > MAX_SIMILAR_ADVERT_COUNT) {
       for (let i = 0; i < MAX_SIMILAR_ADVERT_COUNT; i++) {
-        filteredAdverts.push(concatedAdverts[i]);
+        filteredAdverts.push(resultAdverts[i]);
       }
     } else {
-      filteredAdverts = concatedAdverts;
+      filteredAdverts = resultAdverts;
     }
   }
 
@@ -312,6 +368,18 @@
 
   resetButton.addEventListener('click', deactivateMap);
 
+// function onFilterChange(filter, type) {
+//   filter.addEventListener('change', function () {
+//     type = filter.value;
+//     clearAdverts();
+//     updateAdverts();
+//   });
+// }
+//
+//   onFilterChange(filterOfType, typeOfHouse);
+//   onFilterChange(filterOfPrice, price);
+//   onFilterChange(filterOfRooms, numberOfRooms);
+//   onFilterChange(filterOfGuests, numberOfGuests);
 
   filterOfType.addEventListener('change', function () {
     typeOfHouse = filterOfType.value;
@@ -319,7 +387,26 @@
     updateAdverts();
   });
 
+  filterOfPrice.addEventListener('change', function () {
+    price = filterOfPrice.value;
+    clearAdverts();
+    updateAdverts();
+  });
+
+  filterOfRooms.addEventListener('change', function () {
+    numberOfRooms = filterOfRooms.value;
+    clearAdverts();
+    updateAdverts();
+  });
+
+  filterOfGuests.addEventListener('change', function () {
+    numberOfGuests = filterOfGuests.value;
+    clearAdverts();
+    updateAdverts();
+  });
+
   window.main = {
+    MAX_PRICE: MAX_PRICE,
     adForm: adForm,
     similarListElement: similarListElement,
     mainPin: mainPin,
