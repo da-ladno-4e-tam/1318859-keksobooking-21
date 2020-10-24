@@ -6,6 +6,7 @@
   const MOUSE_BUTTON_LEFT = 1;
   const MAX_SIMILAR_ADVERT_COUNT = 5;
   const MAX_PRICE = 1000000;
+  const ANY_CHOICE = 'any';
   const PRICE_VALUES = {
     'any': {
       MIN_COST: 0,
@@ -48,10 +49,10 @@
   let domAdverts = [];
   let adverts = [];
   let filteredAdverts = [];
-  let typeOfHouse = 'any';
-  let price = 'any';
-  let numberOfRooms = 'any';
-  let numberOfGuests = 'any';
+  let typeOfHouse = ANY_CHOICE;
+  let price = ANY_CHOICE;
+  let numberOfRooms = ANY_CHOICE;
+  let numberOfGuests = ANY_CHOICE;
   let features = [];
 
 
@@ -59,48 +60,40 @@
     return array.filter((item) => subArray.includes(item));
   }
 
+  function filterByType(advert) {
+    return (typeOfHouse === ANY_CHOICE) ? adverts : advert.offer.type === typeOfHouse;
+  }
+
+  function filterByPrice(advert) {
+    return (price === ANY_CHOICE) ? adverts : (advert.offer.price > PRICE_VALUES[price].MIN_COST && advert.offer.price <= PRICE_VALUES[price].MAX_COST);
+  }
+
+  function filterByRooms(advert) {
+    return (numberOfRooms === ANY_CHOICE) ? adverts : advert.offer.rooms === Number(numberOfRooms);
+  }
+
+  function filterByGuests(advert) {
+    return (numberOfGuests === ANY_CHOICE) ? adverts : advert.offer.guests === Number(numberOfGuests);
+  }
+
+  function filterByFeatures(advert) {
+    let arr = [];
+    for (let i = 0; i < features.length; i++) {
+      arr.push(advert.offer.features.indexOf(features[i]));
+    }
+    if (!arr.includes(-1)) {
+      return advert.offer.features;
+    } else {
+      return [];
+    }
+  }
+
   function filterAdverts() {
-    const sameTypeOfHouseAdverts = adverts.filter(function (advert) {
-      if (typeOfHouse === 'any') {
-        return adverts;
-      } else {
-        return advert.offer.type === typeOfHouse;
-      }
-    });
-
-    const samePriceAdverts = adverts.filter(function (advert) {
-      if (price === 'any') {
-        return adverts;
-      } else {
-        return (advert.offer.price > PRICE_VALUES[price].MIN_COST && advert.offer.price <= PRICE_VALUES[price].MAX_COST);
-      }
-    });
-
-    const sameTypeOfRoomsAdverts = adverts.filter(function (advert) {
-      if (numberOfRooms === 'any') {
-        return adverts;
-      } else {
-        return advert.offer.rooms === Number(numberOfRooms);
-      }
-    });
-
-    const sameTypeOfGuestsAdverts = adverts.filter(function (advert) {
-      if (numberOfGuests === 'any') {
-        return adverts;
-      } else {
-        return advert.offer.guests === Number(numberOfGuests);
-      }
-    });
-
-    const sameTypeOfFeatures = adverts.filter(function (advert) {
-      let arr = [];
-      for (let i = 0; i < features.length; i++) {
-        arr.push(advert.offer.features.indexOf(features[i]));
-      }
-      if (!arr.includes(-1)) {
-        return advert.offer.features;
-      }
-    });
+    const sameTypeOfHouseAdverts = adverts.filter(filterByType);
+    const samePriceAdverts = adverts.filter(filterByPrice);
+    const sameTypeOfRoomsAdverts = adverts.filter(filterByRooms);
+    const sameTypeOfGuestsAdverts = adverts.filter(filterByGuests);
+    const sameTypeOfFeatures = adverts.filter(filterByFeatures);
 
     let resultAdverts = intersectArrays(sameTypeOfHouseAdverts, samePriceAdverts);
     resultAdverts = intersectArrays(resultAdverts, sameTypeOfRoomsAdverts);
@@ -318,7 +311,7 @@
     map.classList.add('map--faded');
     mapFilters.reset();
     clearAdverts();
-    typeOfHouse = 'any';
+    typeOfHouse = ANY_CHOICE;
     updateAdverts();
     moveMainPinToStart();
     disableForm();
