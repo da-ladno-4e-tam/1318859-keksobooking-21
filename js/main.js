@@ -81,11 +81,7 @@
     for (let i = 0; i < features.length; i++) {
       arr.push(advert.offer.features.indexOf(features[i]));
     }
-    if (!arr.includes(-1)) {
-      return advert.offer.features;
-    } else {
-      return [];
-    }
+    return (!arr.includes(-1));
   }
 
   function filterAdverts() {
@@ -375,41 +371,29 @@
 
   resetButton.addEventListener('click', deactivateMap);
 
-  // function onFilterChange(filter, type) {
-  //   filter.addEventListener('change', function () {
-  //     type = filter.value;
-  //     clearAdverts();
-  //     updateAdverts();
-  //   });
-  // }
-  //
-  // onFilterChange(filterOfType, typeOfHouse);
-  // onFilterChange(filterOfPrice, price);
-  // onFilterChange(filterOfRooms, numberOfRooms);
-  // onFilterChange(filterOfGuests, numberOfGuests);
+  function onFilterChange() {
+    clearAdverts();
+    updateAdverts();
+  }
 
   filterOfType.addEventListener('change', function () {
     typeOfHouse = filterOfType.value;
-    clearAdverts();
-    updateAdverts();
+    onFilterChange();
   });
 
   filterOfPrice.addEventListener('change', function () {
     price = filterOfPrice.value;
-    clearAdverts();
-    updateAdverts();
+    onFilterChange();
   });
 
   filterOfRooms.addEventListener('change', function () {
     numberOfRooms = filterOfRooms.value;
-    clearAdverts();
-    updateAdverts();
+    onFilterChange();
   });
 
   filterOfGuests.addEventListener('change', function () {
     numberOfGuests = filterOfGuests.value;
-    clearAdverts();
-    updateAdverts();
+    onFilterChange();
   });
 
   for (let i = 0; i < featuresArray.length; i++) {
