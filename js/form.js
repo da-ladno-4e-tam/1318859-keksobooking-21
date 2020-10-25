@@ -3,7 +3,6 @@
 (function () {
   const MIN_TITLE_LENGTH = 30;
   const MAX_TITLE_LENGTH = 100;
-  const MAX_PRICE = 1000000;
   const REGULAR_FOR_IMAGES = /\.(jpeg|jpg|png|webp)$/;
   const avatarInput = window.main.adForm.querySelector('#avatar');
   const imagesInput = window.main.adForm.querySelector('#images');
@@ -20,7 +19,7 @@
       minLength: `Заголовок должен быть не меньше ${MIN_TITLE_LENGTH} симв.`,
       maxLength: `Заголовок должен быть не больше ${MAX_TITLE_LENGTH} симв.`
     },
-    price: `Максимальная цена за ночь не должна превышать ${MAX_PRICE} руб.`,
+    price: `Максимальная цена за ночь не должна превышать ${window.main.MAX_PRICE} руб.`,
     capacity: `Измените количество комнат или гостей`,
     images: `Выберите изображение формата "jpeg", "jpg", "webp" или "png"`
   };
@@ -63,7 +62,7 @@
   }
 
   function validatePrice() {
-    if (priceInput.value > MAX_PRICE) {
+    if (priceInput.value > window.main.MAX_PRICE) {
       priceInput.setCustomValidity(customValidities.price);
     } else {
       priceInput.setCustomValidity('');

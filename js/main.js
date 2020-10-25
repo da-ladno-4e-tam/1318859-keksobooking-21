@@ -5,6 +5,26 @@
   const KEY_ESCAPE = 'Escape';
   const MOUSE_BUTTON_LEFT = 1;
   const MAX_SIMILAR_ADVERT_COUNT = 5;
+  const MAX_PRICE = 1000000;
+  const ANY_CHOICE = 'any';
+  const PRICE_VALUES = {
+    'any': {
+      MIN_COST: 0,
+      MAX_COST: MAX_PRICE
+    },
+    'low': {
+      MIN_COST: 0,
+      MAX_COST: 10000
+    },
+    'middle': {
+      MIN_COST: 10000,
+      MAX_COST: 50000
+    },
+    'high': {
+      MIN_COST: 50000,
+      MAX_COST: Infinity
+    }
+  };
   const map = document.querySelector('.map');
   const mainContainer = document.querySelector('main');
   const mapFilters = map.querySelector('.map__filters');
@@ -21,28 +41,67 @@
   const successTemplate = document.querySelector('#success').content.querySelector('.success');
   const errorTemplate = document.querySelector('#error').content.querySelector('.error');
   const filterOfType = mapFilters.querySelector('#housing-type');
+  const filterOfPrice = mapFilters.querySelector('#housing-price');
+  const filterOfRooms = mapFilters.querySelector('#housing-rooms');
+  const filterOfGuests = mapFilters.querySelector('#housing-guests');
+  const filtersOfFeatures = mapFilters.querySelectorAll('.map__checkbox');
+  const featuresArray = Array.from(filtersOfFeatures);
   let domAdverts = [];
   let adverts = [];
   let filteredAdverts = [];
-  let typeOfHouse = 'any';
+  let typeOfHouse = ANY_CHOICE;
+  let price = ANY_CHOICE;
+  let numberOfRooms = ANY_CHOICE;
+  let numberOfGuests = ANY_CHOICE;
+  let features = [];
+
+
+  function intersectArrays(array, subArray) {
+    return array.filter((item) => subArray.includes(item));
+  }
+
+  function filterByType(advert) {
+    return (typeOfHouse === ANY_CHOICE) ? adverts : advert.offer.type === typeOfHouse;
+  }
+
+  function filterByPrice(advert) {
+    return (price === ANY_CHOICE) ? adverts : (advert.offer.price > PRICE_VALUES[price].MIN_COST && advert.offer.price <= PRICE_VALUES[price].MAX_COST);
+  }
+
+  function filterByRooms(advert) {
+    return (numberOfRooms === ANY_CHOICE) ? adverts : advert.offer.rooms === Number(numberOfRooms);
+  }
+
+  function filterByGuests(advert) {
+    return (numberOfGuests === ANY_CHOICE) ? adverts : advert.offer.guests === Number(numberOfGuests);
+  }
+
+  function filterByFeatures(advert) {
+    let arr = [];
+    for (let i = 0; i < features.length; i++) {
+      arr.push(advert.offer.features.indexOf(features[i]));
+    }
+    return (!arr.includes(-1));
+  }
 
   function filterAdverts() {
-    const sameTypeOfHouseAdverts = adverts.filter(function (advert) {
-      if (typeOfHouse === 'any') {
-        return adverts;
-      } else {
-        return advert.offer.type === typeOfHouse;
-      }
-    });
+    const sameTypeOfHouseAdverts = adverts.filter(filterByType);
+    const samePriceAdverts = adverts.filter(filterByPrice);
+    const sameTypeOfRoomsAdverts = adverts.filter(filterByRooms);
+    const sameTypeOfGuestsAdverts = adverts.filter(filterByGuests);
+    const sameTypeOfFeatures = adverts.filter(filterByFeatures);
 
-    const concatedAdverts = sameTypeOfHouseAdverts;
+    let resultAdverts = intersectArrays(sameTypeOfHouseAdverts, samePriceAdverts);
+    resultAdverts = intersectArrays(resultAdverts, sameTypeOfRoomsAdverts);
+    resultAdverts = intersectArrays(resultAdverts, sameTypeOfGuestsAdverts);
+    resultAdverts = intersectArrays(resultAdverts, sameTypeOfFeatures);
 
-    if (concatedAdverts.length > MAX_SIMILAR_ADVERT_COUNT) {
+    if (resultAdverts.length > MAX_SIMILAR_ADVERT_COUNT) {
       for (let i = 0; i < MAX_SIMILAR_ADVERT_COUNT; i++) {
-        filteredAdverts.push(concatedAdverts[i]);
+        filteredAdverts.push(resultAdverts[i]);
       }
     } else {
-      filteredAdverts = concatedAdverts;
+      filteredAdverts = resultAdverts;
     }
   }
 
@@ -248,7 +307,7 @@
     map.classList.add('map--faded');
     mapFilters.reset();
     clearAdverts();
-    typeOfHouse = 'any';
+    typeOfHouse = ANY_CHOICE;
     updateAdverts();
     moveMainPinToStart();
     disableForm();
@@ -312,14 +371,48 @@
 
   resetButton.addEventListener('click', deactivateMap);
 
+  function onFilterChange() {
+    clearAdverts();
+    updateAdverts();
+  }
 
   filterOfType.addEventListener('change', function () {
     typeOfHouse = filterOfType.value;
-    clearAdverts();
-    updateAdverts();
+    onFilterChange();
   });
 
+  filterOfPrice.addEventListener('change', function () {
+    price = filterOfPrice.value;
+    onFilterChange();
+  });
+
+  filterOfRooms.addEventListener('change', function () {
+    numberOfRooms = filterOfRooms.value;
+    onFilterChange();
+  });
+
+  filterOfGuests.addEventListener('change', function () {
+    numberOfGuests = filterOfGuests.value;
+    onFilterChange();
+  });
+
+  for (let i = 0; i < featuresArray.length; i++) {
+    featuresArray[i].addEventListener('change', function () {
+      if (featuresArray[i].checked) {
+        features.push(featuresArray[i].value);
+      } else {
+        const index = features.indexOf(featuresArray[i].value);
+        if (index > -1) {
+          features.splice(index, 1);
+        }
+      }
+      clearAdverts();
+      updateAdverts();
+    });
+  }
+
   window.main = {
+    MAX_PRICE: MAX_PRICE,
     adForm: adForm,
     similarListElement: similarListElement,
     mainPin: mainPin,
