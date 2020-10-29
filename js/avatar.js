@@ -1,19 +1,17 @@
 'use strict';
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const avatarChooser = window.main.adForm.querySelector('.ad-form__field input[type=file]');
-const avatarPreview = window.main.adForm.querySelector('.ad-form-header__preview img');
 const roomChooser = window.main.adForm.querySelector('.ad-form__upload input[type=file]');
-const roomPreviewContainer = window.main.adForm.querySelector('.ad-form__photo');
 
 function createRoomPreview(reader) {
   const roomPreview = document.createElement("img");
-  if (roomPreviewContainer.children[0]) {
-    roomPreviewContainer.children[0].remove();
+  if (window.main.roomPreviewContainer.children[0]) {
+    window.main.roomPreviewContainer.children[0].remove();
   }
-  roomPreviewContainer.appendChild(roomPreview);
-  roomPreviewContainer.style.display = "flex";
-  roomPreviewContainer.style.alignItems = "center";
-  roomPreviewContainer.style.justifyContent = "center";
+  window.main.roomPreviewContainer.appendChild(roomPreview);
+  window.main.roomPreviewContainer.style.display = "flex";
+  window.main.roomPreviewContainer.style.alignItems = "center";
+  window.main.roomPreviewContainer.style.justifyContent = "center";
   roomPreview.style.maxHeight = "100%";
   roomPreview.style.maxWidth = "100%";
   roomPreview.alt = "Фото жилья";
@@ -21,7 +19,7 @@ function createRoomPreview(reader) {
 }
 
 function createAvatar(reader) {
-  avatarPreview.src = reader.result;
+  window.main.avatarPreview.src = reader.result;
 }
 
 function onChangeFile(fileChooser, createFunction) {

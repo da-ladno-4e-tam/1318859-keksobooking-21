@@ -30,6 +30,8 @@ const mapFilters = map.querySelector('.map__filters');
 const filterSelects = mapFilters.querySelectorAll('select');
 const filterFieldsets = mapFilters.querySelectorAll('fieldset');
 const adForm = document.querySelector('.ad-form');
+const roomPreviewContainer = adForm.querySelector('.ad-form__photo');
+const avatarPreview = adForm.querySelector('.ad-form-header__preview img');
 const adFormFieldsets = adForm.querySelectorAll('fieldset');
 const addressInput = adForm.querySelector('#address');
 const resetButton = adForm.querySelector('.ad-form__reset');
@@ -303,6 +305,10 @@ function setMainPinEvents() {
 }
 
 function deactivateMap() {
+  if (roomPreviewContainer.children[0]) {
+    roomPreviewContainer.children[0].remove();
+  }
+  avatarPreview.src = "img/muffin-grey.svg";
   map.classList.add('map--faded');
   mapFilters.reset();
   clearAdverts();
@@ -414,5 +420,7 @@ window.main = {
   adForm: adForm,
   similarListElement: similarListElement,
   mainPin: mainPin,
-  addressInput: addressInput
+  addressInput: addressInput,
+  roomPreviewContainer: roomPreviewContainer,
+  avatarPreview: avatarPreview
 };
