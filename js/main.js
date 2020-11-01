@@ -133,10 +133,20 @@ function reactivateMap() {
   showPins();
 }
 
+function checkOffer(arr) {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (!arr[i].offer) {
+      arr.splice(i, 1);
+    }
+  }
+  return arr;
+}
+
 function onLoad(data) {
   window.utils.disableElementsInArray(filterSelects, false);
   window.utils.disableElementsInArray(filterFieldsets, false);
   adverts = data;
+  checkOffer(adverts);
   updateAdverts();
 }
 
