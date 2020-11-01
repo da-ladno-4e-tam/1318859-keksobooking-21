@@ -41,12 +41,13 @@ const noActiveMainPinX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2
 const noActiveMainPinY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+
 const filterOfType = mapFilters.querySelector('#housing-type');
 const filterOfPrice = mapFilters.querySelector('#housing-price');
 const filterOfRooms = mapFilters.querySelector('#housing-rooms');
 const filterOfGuests = mapFilters.querySelector('#housing-guests');
-const filtersOfFeatures = mapFilters.querySelectorAll('.map__checkbox');
-const featuresArray = Array.from(filtersOfFeatures);
+// const filtersOfFeatures = mapFilters.querySelectorAll('.map__checkbox');
+
 let domAdverts = [];
 let adverts = [];
 let filteredAdverts = [];
@@ -56,58 +57,11 @@ let numberOfRooms = ANY_CHOICE;
 let numberOfGuests = ANY_CHOICE;
 let features = [];
 
-
-function intersectArrays(array, subArray) {
-  return array.filter((item) => subArray.includes(item));
-}
-
-function filterByType(advert) {
-  return (typeOfHouse === ANY_CHOICE) ? adverts : advert.offer.type === typeOfHouse;
-}
-
-function filterByPrice(advert) {
-  return (price === ANY_CHOICE) ? adverts : (advert.offer.price > PRICE_VALUES[price].MIN_COST && advert.offer.price <= PRICE_VALUES[price].MAX_COST);
-}
-
-function filterByRooms(advert) {
-  return (numberOfRooms === ANY_CHOICE) ? adverts : advert.offer.rooms === Number(numberOfRooms);
-}
-
-function filterByGuests(advert) {
-  return (numberOfGuests === ANY_CHOICE) ? adverts : advert.offer.guests === Number(numberOfGuests);
-}
-
-function filterByFeatures(advert) {
-  let arr = [];
-  for (let i = 0; i < features.length; i++) {
-    arr.push(advert.offer.features.indexOf(features[i]));
-  }
-  return (!arr.includes(-1));
-}
-
-function filterAdverts() {
-  const sameTypeOfHouseAdverts = adverts.filter(filterByType);
-  const samePriceAdverts = adverts.filter(filterByPrice);
-  const sameTypeOfRoomsAdverts = adverts.filter(filterByRooms);
-  const sameTypeOfGuestsAdverts = adverts.filter(filterByGuests);
-  const sameTypeOfFeatures = adverts.filter(filterByFeatures);
-
-  let resultAdverts = intersectArrays(sameTypeOfHouseAdverts, samePriceAdverts);
-  resultAdverts = intersectArrays(resultAdverts, sameTypeOfRoomsAdverts);
-  resultAdverts = intersectArrays(resultAdverts, sameTypeOfGuestsAdverts);
-  resultAdverts = intersectArrays(resultAdverts, sameTypeOfFeatures);
-
-  if (resultAdverts.length > MAX_SIMILAR_ADVERT_COUNT) {
-    for (let i = 0; i < MAX_SIMILAR_ADVERT_COUNT; i++) {
-      filteredAdverts.push(resultAdverts[i]);
-    }
-  } else {
-    filteredAdverts = resultAdverts;
-  }
-}
-
 function updateAdverts() {
-  filterAdverts();
+  // console.log('update');
+  // console.log(typeOfHouse);
+  filteredAdverts = window.filter.filterAdverts(adverts, filteredAdverts);
+  // console.log(typeOfHouse);
   window.utils.getContent(window.pin.renderPin, filteredAdverts, similarListElement, 0);
   window.utils.getContent(window.card.renderPopup, filteredAdverts, map, 1);
   getDomAdverts(filteredAdverts);
@@ -147,13 +101,30 @@ function onMainPinSecondClick(evt) {
 }
 
 function activateMap() {
+  // console.log('activate');
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
   window.utils.disableElementsInArray(adFormFieldsets, false);
+  // console.log(typeOfHouse);
   window.backend.load(onLoad, onError);
+  // console.log(typeOfHouse);
 }
 
 function reactivateMap() {
+
+  // console.log('reactivate');
+  // console.log(typeOfHouse);
+  window.backend.load(onLoad, onError);
+  // console.log(adverts);
+  // console.log(filteredAdverts);
+  // console.log(typeOfHouse);
+  filteredAdverts = adverts;
+  // console.log(filteredAdverts);
+  // console.log(typeOfHouse);
+  // filteredAdverts = window.filter.filterAdverts(adverts, filteredAdverts);
+  // console.log(filteredAdverts);
+  // console.log(typeOfHouse);
+  // console.log(domAdverts);
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
   window.utils.disableElementsInArray(filterSelects, false);
@@ -305,6 +276,7 @@ function setMainPinEvents() {
 }
 
 function deactivateMap() {
+  // console.log('deactivate');
   if (roomPreviewContainer.children[0]) {
     roomPreviewContainer.children[0].remove();
   }
@@ -312,14 +284,26 @@ function deactivateMap() {
   map.classList.add('map--faded');
   mapFilters.reset();
   clearAdverts();
-  typeOfHouse = ANY_CHOICE;
-  updateAdverts();
   moveMainPinToStart();
   disableForm();
   hideAllAdverts();
   hidePins();
   deactivatePins();
   setMainPinEvents();
+  refreshFilters();
+  // console.log(typeOfHouse);
+}
+
+function refreshFilters() {
+  typeOfHouse = ANY_CHOICE;
+  price = ANY_CHOICE;
+  numberOfRooms = ANY_CHOICE;
+  numberOfGuests = ANY_CHOICE;
+  filterOfType.value = ANY_CHOICE;
+  filterOfPrice.value = ANY_CHOICE;
+  filterOfRooms.value = ANY_CHOICE;
+  filterOfGuests.value = ANY_CHOICE;
+  features = [];
 }
 
 function onSubmit(evt) {
@@ -367,11 +351,6 @@ function onFormMessageEscPress(evt) {
   }
 }
 
-function onFilterChange() {
-  clearAdverts();
-  updateAdverts();
-}
-
 deactivateForm();
 
 mainPin.addEventListener('mousedown', onMainPinClick);
@@ -381,46 +360,31 @@ adForm.addEventListener('submit', onSubmit);
 
 resetButton.addEventListener('click', deactivateMap);
 
-filterOfType.addEventListener('change', function () {
-  typeOfHouse = filterOfType.value;
-  onFilterChange();
-});
-
-filterOfPrice.addEventListener('change', function () {
-  price = filterOfPrice.value;
-  onFilterChange();
-});
-
-filterOfRooms.addEventListener('change', function () {
-  numberOfRooms = filterOfRooms.value;
-  onFilterChange();
-});
-
-filterOfGuests.addEventListener('change', function () {
-  numberOfGuests = filterOfGuests.value;
-  onFilterChange();
-});
-
-for (let i = 0; i < featuresArray.length; i++) {
-  featuresArray[i].addEventListener('change', function () {
-    if (featuresArray[i].checked) {
-      features.push(featuresArray[i].value);
-    } else {
-      const index = features.indexOf(featuresArray[i].value);
-      if (index > -1) {
-        features.splice(index, 1);
-      }
-    }
-    onFilterChange();
-  });
-}
 
 window.main = {
   MAX_PRICE: MAX_PRICE,
+  MAX_SIMILAR_ADVERT_COUNT: MAX_SIMILAR_ADVERT_COUNT,
+  ANY_CHOICE: ANY_CHOICE,
+  PRICE_VALUES: PRICE_VALUES,
+  map: map,
+  mapFilters: mapFilters,
   adForm: adForm,
   similarListElement: similarListElement,
   mainPin: mainPin,
   addressInput: addressInput,
   roomPreviewContainer: roomPreviewContainer,
-  avatarPreview: avatarPreview
+  avatarPreview: avatarPreview,
+  adverts: adverts,
+  clearAdverts: clearAdverts,
+  updateAdverts: updateAdverts,
+  typeOfHouse: typeOfHouse,
+  price: price,
+  numberOfRooms: numberOfRooms,
+  numberOfGuests: numberOfGuests,
+  features: features,
+
+  filterOfType: filterOfType,
+  filterOfPrice: filterOfPrice,
+  filterOfRooms: filterOfRooms,
+  filterOfGuests: filterOfGuests
 };
