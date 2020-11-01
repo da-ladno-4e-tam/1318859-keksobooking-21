@@ -12,10 +12,19 @@ const featuresArray = Array.from(filtersOfFeatures);
 // let numberOfGuests = window.main.ANY_CHOICE;
 // let features = [];
 
+function debounce(cb) {
+  const DEBOUNCE_INTERVAL = 500;
+  let lastTimeout;
+  if (lastTimeout) {
+    window.clearTimeout(lastTimeout);
+  }
+  lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
+}
+
 
 function onFilterChange() {
   window.main.clearAdverts();
-  window.main.updateAdverts();
+  debounce(window.main.updateAdverts);
 }
 
 function intersectArrays(array, subArray) {

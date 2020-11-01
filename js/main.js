@@ -114,11 +114,11 @@ function reactivateMap() {
 
   // console.log('reactivate');
   // console.log(typeOfHouse);
-  window.backend.load(onLoad, onError);
+  // window.backend.load(onLoad, onError);
   // console.log(adverts);
   // console.log(filteredAdverts);
   // console.log(typeOfHouse);
-  filteredAdverts = adverts;
+  // filteredAdverts = adverts;
   // console.log(filteredAdverts);
   // console.log(typeOfHouse);
   // filteredAdverts = window.filter.filterAdverts(adverts, filteredAdverts);
@@ -152,7 +152,7 @@ function onLoad(data) {
 
 function onError(errorMessage) {
   const node = document.createElement('div');
-  node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: yellow;';
+  node.style = 'z-index: 1; margin: 0 auto; text-align: center; background-color: yellow;';
   node.style.position = 'absolute';
   node.style.left = 0;
   node.style.bottom = '46px';
@@ -294,6 +294,7 @@ function deactivateMap() {
   map.classList.add('map--faded');
   mapFilters.reset();
   clearAdverts();
+  updateAdverts();
   moveMainPinToStart();
   disableForm();
   hideAllAdverts();
