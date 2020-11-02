@@ -12,14 +12,14 @@ function getContent(render, arr, parent, child) {
 function disableElementsInArray(arr, flag) {
   for (let i = 0; i < arr.length; i++) {
     if (flag === true) {
-      arr[i].setAttribute('disabled', 'disabled');
+      arr[i].setAttribute(`disabled`, `disabled`);
     } else {
-      arr[i].removeAttribute('disabled');
+      arr[i].removeAttribute(`disabled`);
     }
   }
 }
 
 window.utils = {
-  getContent: getContent,
-  disableElementsInArray: disableElementsInArray
+  getContent,
+  disableElementsInArray
 };

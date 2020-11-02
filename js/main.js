@@ -1,11 +1,11 @@
 'use strict';
 
-const KEY_ENTER = 'Enter';
-const KEY_ESCAPE = 'Escape';
+const KEY_ENTER = `Enter`;
+const KEY_ESCAPE = `Escape`;
 const MOUSE_BUTTON_LEFT = 1;
 const MAX_SIMILAR_ADVERT_COUNT = 5;
 const MAX_PRICE = 1000000;
-const ANY_CHOICE = 'any';
+const ANY_CHOICE = `any`;
 const PRICE_VALUES = {
   'any': {
     MIN_COST: 0,
@@ -24,23 +24,23 @@ const PRICE_VALUES = {
     MAX_COST: Infinity
   }
 };
-const map = document.querySelector('.map');
-const mainContainer = document.querySelector('main');
-const mapFilters = map.querySelector('.map__filters');
-const filterSelects = mapFilters.querySelectorAll('select');
-const filterFieldsets = mapFilters.querySelectorAll('fieldset');
-const adForm = document.querySelector('.ad-form');
-const roomPreviewContainer = adForm.querySelector('.ad-form__photo');
-const avatarPreview = adForm.querySelector('.ad-form-header__preview img');
-const adFormFieldsets = adForm.querySelectorAll('fieldset');
-const addressInput = adForm.querySelector('#address');
-const resetButton = adForm.querySelector('.ad-form__reset');
-const mainPin = map.querySelector('.map__pin--main');
-const similarListElement = map.querySelector('.map__pins');
+const map = document.querySelector(`.map`);
+const mainContainer = document.querySelector(`main`);
+const mapFilters = map.querySelector(`.map__filters`);
+const filterSelects = mapFilters.querySelectorAll(`select`);
+const filterFieldsets = mapFilters.querySelectorAll(`fieldset`);
+const adForm = document.querySelector(`.ad-form`);
+const roomPreviewContainer = adForm.querySelector(`.ad-form__photo`);
+const avatarPreview = adForm.querySelector(`.ad-form-header__preview img`);
+const adFormFieldsets = adForm.querySelectorAll(`fieldset`);
+const addressInput = adForm.querySelector(`#address`);
+const resetButton = adForm.querySelector(`.ad-form__reset`);
+const mainPin = map.querySelector(`.map__pin--main`);
+const similarListElement = map.querySelector(`.map__pins`);
 const noActiveMainPinX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
 const noActiveMainPinY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
-const successTemplate = document.querySelector('#success').content.querySelector('.success');
-const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
 
 let domAdverts = [];
 let adverts = [];
@@ -75,8 +75,8 @@ function getDomAdverts(arr) {
 function onMainPinClick(evt) {
   if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
     activateMap();
-    mainPin.removeEventListener('keydown', onMainPinClick);
-    mainPin.removeEventListener('mousedown', onMainPinClick);
+    mainPin.removeEventListener(`keydown`, onMainPinClick);
+    mainPin.removeEventListener(`mousedown`, onMainPinClick);
   }
 }
 
@@ -87,16 +87,16 @@ function onMainPinSecondClick(evt) {
 }
 
 function activateMap() {
-  map.classList.remove('map--faded');
-  adForm.classList.remove('ad-form--disabled');
+  map.classList.remove(`map--faded`);
+  adForm.classList.remove(`ad-form--disabled`);
   window.utils.disableElementsInArray(adFormFieldsets, false);
   window.backend.load(onLoad, onError);
 }
 
 function reactivateMap() {
   window.backend.load(onLoad, onError);
-  map.classList.remove('map--faded');
-  adForm.classList.remove('ad-form--disabled');
+  map.classList.remove(`map--faded`);
+  adForm.classList.remove(`ad-form--disabled`);
   window.utils.disableElementsInArray(filterSelects, false);
   window.utils.disableElementsInArray(filterFieldsets, false);
   window.utils.disableElementsInArray(adFormFieldsets, false);
@@ -121,41 +121,41 @@ function onLoad(data) {
 }
 
 function onError(errorMessage) {
-  const node = document.createElement('div');
-  node.style = 'z-index: 1; margin: 0 auto; text-align: center; background-color: yellow;';
-  node.style.position = 'absolute';
+  const node = document.createElement(`div`);
+  node.style = `z-index: 1; margin: 0 auto; text-align: center; background-color: yellow;`;
+  node.style.position = `absolute`;
   node.style.left = 0;
-  node.style.bottom = '46px';
+  node.style.bottom = `46px`;
   node.style.right = 0;
-  node.style.fontSize = '28px';
+  node.style.fontSize = `28px`;
 
   node.textContent = errorMessage;
-  map.insertAdjacentElement('afterbegin', node);
+  map.insertAdjacentElement(`afterbegin`, node);
 }
 
 function setOnPinEvents(advertsArray) {
   for (let i = 0; i < advertsArray.length; i++) {
-    similarListElement.children[i].addEventListener('click', setOnPinClick(advertsArray[i], similarListElement.children[i]), false);
-    similarListElement.children[i].addEventListener('keydown', setOnPinEnterPress(advertsArray[i], similarListElement.children[i]), false);
+    similarListElement.children[i].addEventListener(`click`, setOnPinClick(advertsArray[i], similarListElement.children[i]), false);
+    similarListElement.children[i].addEventListener(`keydown`, setOnPinEnterPress(advertsArray[i], similarListElement.children[i]), false);
   }
 }
 
 function setOnPopupEvents(advertsArray) {
   for (let i = 0; i < advertsArray.length; i++) {
-    advertsArray[i].querySelector('.popup__close').addEventListener('click', setOnPopupCloseClick(advertsArray[i]), false);
-    advertsArray[i].querySelector('.popup__close').addEventListener('keydown', setOnPopupCloseEnterPress(advertsArray[i]), false);
+    advertsArray[i].querySelector(`.popup__close`).addEventListener(`click`, setOnPopupCloseClick(advertsArray[i]), false);
+    advertsArray[i].querySelector(`.popup__close`).addEventListener(`keydown`, setOnPopupCloseEnterPress(advertsArray[i]), false);
   }
 }
 
 function hideAllAdverts() {
   domAdverts.forEach(function (item, i) {
-    map.children[i + 1].classList.add('hidden');
+    map.children[i + 1].classList.add(`hidden`);
   });
 }
 
 function deactivatePins() {
   domAdverts.forEach(function (item, i) {
-    similarListElement.children[i].classList.remove('map__pin--active');
+    similarListElement.children[i].classList.remove(`map__pin--active`);
   });
 }
 
@@ -163,8 +163,8 @@ function setOnPinClick(advert, pin) {
   return function () {
     showAdvert(advert);
     deactivatePins();
-    pin.classList.add('map__pin--active');
-    document.addEventListener('keydown', onPopupEscPress);
+    pin.classList.add(`map__pin--active`);
+    document.addEventListener(`keydown`, onPopupEscPress);
   };
 }
 
@@ -174,21 +174,21 @@ function setOnPinEnterPress(advert, pin) {
       evt.preventDefault();
       showAdvert(advert);
       deactivatePins();
-      pin.classList.add('map__pin--active');
+      pin.classList.add(`map__pin--active`);
     }
-    document.addEventListener('keydown', onPopupEscPress);
+    document.addEventListener(`keydown`, onPopupEscPress);
   };
 }
 
 function showAdvert(advert) {
   hideAllAdverts();
-  advert.classList.remove('hidden');
+  advert.classList.remove(`hidden`);
 }
 
 function hideAdvert(advert) {
-  advert.classList.add('hidden');
-  advert.querySelector('.popup__close').removeEventListener('click', setOnPopupCloseClick(advert));
-  advert.querySelector('.popup__close').removeEventListener('keydown', setOnPopupCloseEnterPress(advert));
+  advert.classList.add(`hidden`);
+  advert.querySelector(`.popup__close`).removeEventListener(`click`, setOnPopupCloseClick(advert));
+  advert.querySelector(`.popup__close`).removeEventListener(`keydown`, setOnPopupCloseEnterPress(advert));
 }
 
 function setOnPopupCloseClick(advert) {
@@ -212,7 +212,7 @@ function onPopupEscPress(evt) {
   if (evt.key === KEY_ESCAPE) {
     evt.preventDefault();
     deactivatePins();
-    document.removeEventListener('keydown', onPopupEscPress);
+    document.removeEventListener(`keydown`, onPopupEscPress);
     hideAllAdverts();
   }
 }
@@ -221,23 +221,23 @@ function deactivateForm() {
   window.utils.disableElementsInArray(filterSelects, true);
   window.utils.disableElementsInArray(filterFieldsets, true);
   window.utils.disableElementsInArray(adFormFieldsets, true);
-  addressInput.setAttribute('value', `${noActiveMainPinX}, ${noActiveMainPinY}`);
+  addressInput.setAttribute(`value`, `${noActiveMainPinX}, ${noActiveMainPinY}`);
 }
 
 function hidePins() {
   for (let i = 0; i < domAdverts.length; i++) {
-    similarListElement.children[i].classList.add('hidden');
+    similarListElement.children[i].classList.add(`hidden`);
   }
 }
 
 function showPins() {
   for (let i = 0; i < domAdverts.length; i++) {
-    similarListElement.children[i].classList.remove('hidden');
+    similarListElement.children[i].classList.remove(`hidden`);
   }
 }
 
 function disableForm() {
-  adForm.classList.add('ad-form--disabled');
+  adForm.classList.add(`ad-form--disabled`);
   window.utils.disableElementsInArray(filterSelects, true);
   window.utils.disableElementsInArray(filterFieldsets, true);
   window.utils.disableElementsInArray(adFormFieldsets, true);
@@ -246,21 +246,21 @@ function disableForm() {
 }
 
 function moveMainPinToStart() {
-  mainPin.style.left = '570px';
-  mainPin.style.top = '375px';
+  mainPin.style.left = `570px`;
+  mainPin.style.top = `375px`;
 }
 
 function setMainPinEvents() {
-  mainPin.addEventListener('mousedown', onMainPinSecondClick);
-  mainPin.addEventListener('keydown', onMainPinSecondClick);
+  mainPin.addEventListener(`mousedown`, onMainPinSecondClick);
+  mainPin.addEventListener(`keydown`, onMainPinSecondClick);
 }
 
 function deactivateMap() {
   if (roomPreviewContainer.children[0]) {
     roomPreviewContainer.children[0].remove();
   }
-  avatarPreview.src = "img/muffin-grey.svg";
-  map.classList.add('map--faded');
+  avatarPreview.src = `img/muffin-grey.svg`;
+  map.classList.add(`map--faded`);
   mapFilters.reset();
   clearAdverts();
   window.filter.refreshFilters();
@@ -292,10 +292,10 @@ function showFormMessage(template) {
 
   mainContainer.insertBefore(fragment, mainContainer.children[0]);
 
-  document.addEventListener('click', onFormMessageClick);
-  document.addEventListener('keydown', onFormMessageEscPress);
+  document.addEventListener(`click`, onFormMessageClick);
+  document.addEventListener(`keydown`, onFormMessageEscPress);
   if (template === errorTemplate) {
-    mainContainer.querySelector('.error__button').addEventListener('mousedown', onFormMessageClick);
+    mainContainer.querySelector(`.error__button`).addEventListener(`mousedown`, onFormMessageClick);
   }
 }
 
@@ -305,42 +305,42 @@ function renderFormMessage(template) {
 
 function onFormMessageClick() {
   mainContainer.children[0].parentNode.removeChild(mainContainer.children[0]);
-  document.removeEventListener('click', onFormMessageClick);
-  document.removeEventListener('keydown', onFormMessageEscPress);
+  document.removeEventListener(`click`, onFormMessageClick);
+  document.removeEventListener(`keydown`, onFormMessageEscPress);
 }
 
 function onFormMessageEscPress(evt) {
   if (evt.key === KEY_ESCAPE) {
     mainContainer.children[0].parentNode.removeChild(mainContainer.children[0]);
-    document.removeEventListener('click', onFormMessageClick);
-    document.removeEventListener('keydown', onFormMessageEscPress);
+    document.removeEventListener(`click`, onFormMessageClick);
+    document.removeEventListener(`keydown`, onFormMessageEscPress);
   }
 }
 
 deactivateForm();
 
-mainPin.addEventListener('mousedown', onMainPinClick);
-mainPin.addEventListener('keydown', onMainPinClick);
+mainPin.addEventListener(`mousedown`, onMainPinClick);
+mainPin.addEventListener(`keydown`, onMainPinClick);
 
-adForm.addEventListener('submit', onSubmit);
+adForm.addEventListener(`submit`, onSubmit);
 
-resetButton.addEventListener('click', deactivateMap);
+resetButton.addEventListener(`click`, deactivateMap);
 
 
 window.main = {
-  MAX_PRICE: MAX_PRICE,
-  MAX_SIMILAR_ADVERT_COUNT: MAX_SIMILAR_ADVERT_COUNT,
-  ANY_CHOICE: ANY_CHOICE,
-  PRICE_VALUES: PRICE_VALUES,
-  map: map,
-  mapFilters: mapFilters,
-  adForm: adForm,
-  similarListElement: similarListElement,
-  mainPin: mainPin,
-  addressInput: addressInput,
-  roomPreviewContainer: roomPreviewContainer,
-  avatarPreview: avatarPreview,
-  adverts: adverts,
-  clearAdverts: clearAdverts,
-  updateAdverts: updateAdverts
+  MAX_PRICE,
+  MAX_SIMILAR_ADVERT_COUNT,
+  ANY_CHOICE,
+  PRICE_VALUES,
+  map,
+  mapFilters,
+  adForm,
+  similarListElement,
+  mainPin,
+  addressInput,
+  roomPreviewContainer,
+  avatarPreview,
+  adverts,
+  clearAdverts,
+  updateAdverts
 };

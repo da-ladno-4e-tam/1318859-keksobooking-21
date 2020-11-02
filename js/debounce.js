@@ -11,5 +11,5 @@ function debounce(cb) {
 }
 
 window.debounce = {
-  debounce: debounce
+  debounce
 };
