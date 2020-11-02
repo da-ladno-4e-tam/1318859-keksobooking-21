@@ -12,14 +12,6 @@ let numberOfRooms = window.main.ANY_CHOICE;
 let numberOfGuests = window.main.ANY_CHOICE;
 let features = [];
 
-function debounce(cb) {
-  const DEBOUNCE_INTERVAL = 500;
-  let lastTimeout;
-  if (lastTimeout) {
-    window.clearTimeout(lastTimeout);
-  }
-  lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
-}
 
 function refreshFilters() {
   typeOfHouse = window.main.ANY_CHOICE;
@@ -90,22 +82,22 @@ function filterAdverts(adverts, filteredAdverts) {
 
 filterOfType.addEventListener('change', function () {
   typeOfHouse = filterOfType.value;
-  debounce(onFilterChange);
+  window.debounce.debounce(onFilterChange);
 });
 
 filterOfPrice.addEventListener('change', function () {
   price = filterOfPrice.value;
-  debounce(onFilterChange);
+  window.debounce.debounce(onFilterChange);
 });
 
 filterOfRooms.addEventListener('change', function () {
   numberOfRooms = filterOfRooms.value;
-  debounce(onFilterChange);
+  window.debounce.debounce(onFilterChange);
 });
 
 filterOfGuests.addEventListener('change', function () {
   numberOfGuests = filterOfGuests.value;
-  debounce(onFilterChange);
+  window.debounce.debounce(onFilterChange);
 });
 
 for (let i = 0; i < featuresArray.length; i++) {
@@ -118,7 +110,7 @@ for (let i = 0; i < featuresArray.length; i++) {
         features.splice(index, 1);
       }
     }
-    debounce(onFilterChange);
+    window.debounce.debounce(onFilterChange);
   });
 }
 
