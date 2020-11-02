@@ -42,26 +42,12 @@ const noActiveMainPinY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
-const filterOfType = mapFilters.querySelector('#housing-type');
-const filterOfPrice = mapFilters.querySelector('#housing-price');
-const filterOfRooms = mapFilters.querySelector('#housing-rooms');
-const filterOfGuests = mapFilters.querySelector('#housing-guests');
-// const filtersOfFeatures = mapFilters.querySelectorAll('.map__checkbox');
-
 let domAdverts = [];
 let adverts = [];
 let filteredAdverts = [];
-let typeOfHouse = ANY_CHOICE;
-let price = ANY_CHOICE;
-let numberOfRooms = ANY_CHOICE;
-let numberOfGuests = ANY_CHOICE;
-let features = [];
 
 function updateAdverts() {
-  // console.log('update');
-  // console.log(typeOfHouse);
   filteredAdverts = window.filter.filterAdverts(adverts, filteredAdverts);
-  // console.log(typeOfHouse);
   window.utils.getContent(window.pin.renderPin, filteredAdverts, similarListElement, 0);
   window.utils.getContent(window.card.renderPopup, filteredAdverts, map, 1);
   getDomAdverts(filteredAdverts);
@@ -101,30 +87,14 @@ function onMainPinSecondClick(evt) {
 }
 
 function activateMap() {
-  // console.log('activate');
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
   window.utils.disableElementsInArray(adFormFieldsets, false);
-  // console.log(typeOfHouse);
   window.backend.load(onLoad, onError);
-  // console.log(typeOfHouse);
 }
 
 function reactivateMap() {
-
-  // console.log('reactivate');
-  // console.log(typeOfHouse);
-  // window.backend.load(onLoad, onError);
-  // console.log(adverts);
-  // console.log(filteredAdverts);
-  // console.log(typeOfHouse);
-  // filteredAdverts = adverts;
-  // console.log(filteredAdverts);
-  // console.log(typeOfHouse);
-  // filteredAdverts = window.filter.filterAdverts(adverts, filteredAdverts);
-  // console.log(filteredAdverts);
-  // console.log(typeOfHouse);
-  // console.log(domAdverts);
+  window.backend.load(onLoad, onError);
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
   window.utils.disableElementsInArray(filterSelects, false);
@@ -286,7 +256,6 @@ function setMainPinEvents() {
 }
 
 function deactivateMap() {
-  // console.log('deactivate');
   if (roomPreviewContainer.children[0]) {
     roomPreviewContainer.children[0].remove();
   }
@@ -294,27 +263,13 @@ function deactivateMap() {
   map.classList.add('map--faded');
   mapFilters.reset();
   clearAdverts();
-  updateAdverts();
+  window.filter.refreshFilters();
   moveMainPinToStart();
   disableForm();
   hideAllAdverts();
   hidePins();
   deactivatePins();
   setMainPinEvents();
-  refreshFilters();
-  // console.log(typeOfHouse);
-}
-
-function refreshFilters() {
-  typeOfHouse = ANY_CHOICE;
-  price = ANY_CHOICE;
-  numberOfRooms = ANY_CHOICE;
-  numberOfGuests = ANY_CHOICE;
-  filterOfType.value = ANY_CHOICE;
-  filterOfPrice.value = ANY_CHOICE;
-  filterOfRooms.value = ANY_CHOICE;
-  filterOfGuests.value = ANY_CHOICE;
-  features = [];
 }
 
 function onSubmit(evt) {
@@ -387,15 +342,5 @@ window.main = {
   avatarPreview: avatarPreview,
   adverts: adverts,
   clearAdverts: clearAdverts,
-  updateAdverts: updateAdverts,
-  typeOfHouse: typeOfHouse,
-  price: price,
-  numberOfRooms: numberOfRooms,
-  numberOfGuests: numberOfGuests,
-  features: features,
-
-  filterOfType: filterOfType,
-  filterOfPrice: filterOfPrice,
-  filterOfRooms: filterOfRooms,
-  filterOfGuests: filterOfGuests
+  updateAdverts: updateAdverts
 };

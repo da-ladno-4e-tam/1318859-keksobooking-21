@@ -1,16 +1,16 @@
 'use strict';
 
-// const filterOfType = window.main.mapFilters.querySelector('#housing-type');
-// const filterOfPrice = window.main.mapFilters.querySelector('#housing-price');
-// const filterOfRooms = window.main.mapFilters.querySelector('#housing-rooms');
-// const filterOfGuests = window.main.mapFilters.querySelector('#housing-guests');
+const filterOfType = window.main.mapFilters.querySelector('#housing-type');
+const filterOfPrice = window.main.mapFilters.querySelector('#housing-price');
+const filterOfRooms = window.main.mapFilters.querySelector('#housing-rooms');
+const filterOfGuests = window.main.mapFilters.querySelector('#housing-guests');
 const filtersOfFeatures = window.main.mapFilters.querySelectorAll('.map__checkbox');
 const featuresArray = Array.from(filtersOfFeatures);
-// let typeOfHouse = window.main.ANY_CHOICE;
-// let price = window.main.ANY_CHOICE;
-// let numberOfRooms = window.main.ANY_CHOICE;
-// let numberOfGuests = window.main.ANY_CHOICE;
-// let features = [];
+let typeOfHouse = window.main.ANY_CHOICE;
+let price = window.main.ANY_CHOICE;
+let numberOfRooms = window.main.ANY_CHOICE;
+let numberOfGuests = window.main.ANY_CHOICE;
+let features = [];
 
 function debounce(cb) {
   const DEBOUNCE_INTERVAL = 500;
@@ -21,6 +21,17 @@ function debounce(cb) {
   lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
 }
 
+function refreshFilters() {
+  typeOfHouse = window.main.ANY_CHOICE;
+  price = window.main.ANY_CHOICE;
+  numberOfRooms = window.main.ANY_CHOICE;
+  numberOfGuests = window.main.ANY_CHOICE;
+  filterOfType.value = window.main.ANY_CHOICE;
+  filterOfPrice.value = window.main.ANY_CHOICE;
+  filterOfRooms.value = window.main.ANY_CHOICE;
+  filterOfGuests.value = window.main.ANY_CHOICE;
+  features = [];
+}
 
 function onFilterChange() {
   window.main.clearAdverts();
@@ -32,35 +43,31 @@ function intersectArrays(array, subArray) {
 }
 
 function filterByType(advert) {
-  return (window.main.typeOfHouse === window.main.ANY_CHOICE) ? window.main.adverts : advert.offer.type === window.main.typeOfHouse;
+  return (typeOfHouse === window.main.ANY_CHOICE) ? window.main.adverts : advert.offer.type === typeOfHouse;
 }
 
 function filterByPrice(advert) {
-  return (window.main.price === window.main.ANY_CHOICE) ? window.main.adverts : (advert.offer.price > window.main.PRICE_VALUES[window.main.price].MIN_COST && advert.offer.price <= window.main.PRICE_VALUES[window.main.price].MAX_COST);
+  return (price === window.main.ANY_CHOICE) ? window.main.adverts : (advert.offer.price > window.main.PRICE_VALUES[price].MIN_COST && advert.offer.price <= window.main.PRICE_VALUES[price].MAX_COST);
 }
 
 function filterByRooms(advert) {
-  return (window.main.numberOfRooms === window.main.ANY_CHOICE) ? window.main.adverts : advert.offer.rooms === Number(window.main.numberOfRooms);
+  return (numberOfRooms === window.main.ANY_CHOICE) ? window.main.adverts : advert.offer.rooms === Number(numberOfRooms);
 }
 
 function filterByGuests(advert) {
-  return (window.main.numberOfGuests === window.main.ANY_CHOICE) ? window.main.adverts : advert.offer.guests === Number(window.main.numberOfGuests);
+  return (numberOfGuests === window.main.ANY_CHOICE) ? window.main.adverts : advert.offer.guests === Number(numberOfGuests);
 }
 
 function filterByFeatures(advert) {
   let arr = [];
-  for (let i = 0; i < window.main.features.length; i++) {
-    arr.push(advert.offer.features.indexOf(window.main.features[i]));
+  for (let i = 0; i < features.length; i++) {
+    arr.push(advert.offer.features.indexOf(features[i]));
   }
   return (!arr.includes(-1));
 }
 
 function filterAdverts(adverts, filteredAdverts) {
-  // console.log('filter');
-  // console.log(window.main.typeOfHouse);
   const sameTypeOfHouseAdverts = adverts.filter(filterByType);
-  // console.log(window.main.typeOfHouse);
-  // console.log('meow');
   const samePriceAdverts = adverts.filter(filterByPrice);
   const sameTypeOfRoomsAdverts = adverts.filter(filterByRooms);
   const sameTypeOfGuestsAdverts = adverts.filter(filterByGuests);
@@ -70,7 +77,6 @@ function filterAdverts(adverts, filteredAdverts) {
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfRoomsAdverts);
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfGuestsAdverts);
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfFeatures);
-
   if (resultAdverts.length > window.main.MAX_SIMILAR_ADVERT_COUNT) {
     for (let i = 0; i < window.main.MAX_SIMILAR_ADVERT_COUNT; i++) {
       filteredAdverts.push(resultAdverts[i]);
@@ -82,34 +88,34 @@ function filterAdverts(adverts, filteredAdverts) {
 }
 
 
-window.main.filterOfType.addEventListener('change', function () {
-  window.main.typeOfHouse = window.main.filterOfType.value;
+filterOfType.addEventListener('change', function () {
+  typeOfHouse = filterOfType.value;
   debounce(onFilterChange);
 });
 
-window.main.filterOfPrice.addEventListener('change', function () {
-  window.main.price = window.main.filterOfPrice.value;
+filterOfPrice.addEventListener('change', function () {
+  price = filterOfPrice.value;
   debounce(onFilterChange);
 });
 
-window.main.filterOfRooms.addEventListener('change', function () {
-  window.main.numberOfRooms = window.main.filterOfRooms.value;
+filterOfRooms.addEventListener('change', function () {
+  numberOfRooms = filterOfRooms.value;
   debounce(onFilterChange);
 });
 
-window.main.filterOfGuests.addEventListener('change', function () {
-  window.main.numberOfGuests = window.main.filterOfGuests.value;
+filterOfGuests.addEventListener('change', function () {
+  numberOfGuests = filterOfGuests.value;
   debounce(onFilterChange);
 });
 
 for (let i = 0; i < featuresArray.length; i++) {
   featuresArray[i].addEventListener('change', function () {
     if (featuresArray[i].checked) {
-      window.main.features.push(featuresArray[i].value);
+      features.push(featuresArray[i].value);
     } else {
-      const index = window.main.features.indexOf(featuresArray[i].value);
+      const index = features.indexOf(featuresArray[i].value);
       if (index > -1) {
-        window.main.features.splice(index, 1);
+        features.splice(index, 1);
       }
     }
     debounce(onFilterChange);
@@ -118,4 +124,5 @@ for (let i = 0; i < featuresArray.length; i++) {
 
 window.filter = {
   filterAdverts: filterAdverts,
+  refreshFilters: refreshFilters
 };
