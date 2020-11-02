@@ -54,7 +54,7 @@ function renderPopup(advert) {
   popupElement.classList.add('hidden');
   popupElement.querySelector('.popup__title').textContent = advert.offer.title;
   popupElement.querySelector('.popup__text--address').textContent = advert.offer.address;
-  popupElement.querySelector('.popup__text--price').innerHTML = `${advert.offer.price}&#x20bd;<span>/ночь</span>`;
+  popupElement.querySelector('.popup__text--price').textContent = `${advert.offer.price} ₽/ночь`;
   popupElement.querySelector('.popup__type').textContent = TYPES_OF_HOUSE[advert.offer.type].LOCAL_NAME;
   popupElement.querySelector('.popup__text--capacity').textContent = `${advert.offer.rooms} комнаты для ${advert.offer.guests} гостей`;
   popupElement.querySelector('.popup__text--time').textContent = `Заезд после ${advert.offer.checkin}, выезд до ${advert.offer.checkout}`;

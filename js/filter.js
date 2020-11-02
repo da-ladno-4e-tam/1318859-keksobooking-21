@@ -24,7 +24,7 @@ function debounce(cb) {
 
 function onFilterChange() {
   window.main.clearAdverts();
-  debounce(window.main.updateAdverts);
+  window.main.updateAdverts();
 }
 
 function intersectArrays(array, subArray) {
@@ -84,22 +84,22 @@ function filterAdverts(adverts, filteredAdverts) {
 
 window.main.filterOfType.addEventListener('change', function () {
   window.main.typeOfHouse = window.main.filterOfType.value;
-  onFilterChange();
+  debounce(onFilterChange);
 });
 
 window.main.filterOfPrice.addEventListener('change', function () {
   window.main.price = window.main.filterOfPrice.value;
-  onFilterChange();
+  debounce(onFilterChange);
 });
 
 window.main.filterOfRooms.addEventListener('change', function () {
   window.main.numberOfRooms = window.main.filterOfRooms.value;
-  onFilterChange();
+  debounce(onFilterChange);
 });
 
 window.main.filterOfGuests.addEventListener('change', function () {
   window.main.numberOfGuests = window.main.filterOfGuests.value;
-  onFilterChange();
+  debounce(onFilterChange);
 });
 
 for (let i = 0; i < featuresArray.length; i++) {
@@ -112,10 +112,9 @@ for (let i = 0; i < featuresArray.length; i++) {
         window.main.features.splice(index, 1);
       }
     }
-    onFilterChange();
+    debounce(onFilterChange);
   });
 }
-
 
 window.filter = {
   filterAdverts: filterAdverts,
