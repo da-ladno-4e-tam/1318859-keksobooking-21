@@ -6,10 +6,10 @@ const MAIN_PIN_TIP = 22;
 const MAIN_PIN_HEIGHT = window.main.mainPin.offsetHeight + MAIN_PIN_TIP;
 
 function fillAddress(currentX, currentY) {
-  window.main.addressInput.setAttribute('value', `${currentX}, ${currentY}`);
+  window.main.addressInput.setAttribute(`value`, `${currentX}, ${currentY}`);
 }
 
-window.main.mainPin.addEventListener('mousedown', function (evt) {
+window.main.mainPin.addEventListener(`mousedown`, function (evt) {
   evt.preventDefault();
 
   let startCoords = {
@@ -19,7 +19,7 @@ window.main.mainPin.addEventListener('mousedown', function (evt) {
   let activeMainPinX = Math.round(window.main.mainPin.offsetLeft + window.main.mainPin.offsetWidth / 2);
   let activeMainPinY = Math.round(window.main.mainPin.offsetTop + MAIN_PIN_HEIGHT);
 
-  window.main.addressInput.setAttribute('value', `${activeMainPinX}, ${activeMainPinY}`);
+  window.main.addressInput.setAttribute(`value`, `${activeMainPinX}, ${activeMainPinY}`);
 
   function onMouseMove(moveEvt) {
     moveEvt.preventDefault();
@@ -38,8 +38,8 @@ window.main.mainPin.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY
     };
 
-    window.main.mainPin.style.top = (window.main.mainPin.offsetTop - shift.y) + 'px';
-    window.main.mainPin.style.left = (window.main.mainPin.offsetLeft - shift.x) + 'px';
+    window.main.mainPin.style.top = (window.main.mainPin.offsetTop - shift.y) + `px`;
+    window.main.mainPin.style.left = (window.main.mainPin.offsetLeft - shift.x) + `px`;
     fillAddress(currentX, currentY);
 
     if (currentX <= 0) {
@@ -64,10 +64,10 @@ window.main.mainPin.addEventListener('mousedown', function (evt) {
   function onMouseUp(upEvt) {
     upEvt.preventDefault();
 
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener(`mousemove`, onMouseMove);
+    document.removeEventListener(`mouseup`, onMouseUp);
   }
 
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
+  document.addEventListener(`mousemove`, onMouseMove);
+  document.addEventListener(`mouseup`, onMouseUp);
 });
