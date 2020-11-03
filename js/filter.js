@@ -53,7 +53,7 @@ function filterByGuests(advert) {
 function filterByFeatures(advert) {
   let arr = [];
 
-  features.forEach(function(item) {
+  features.forEach(function (item) {
     arr.push(advert.offer.features.indexOf(item));
   });
 

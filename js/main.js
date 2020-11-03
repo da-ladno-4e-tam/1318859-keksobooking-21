@@ -134,14 +134,14 @@ function onError(errorMessage) {
 }
 
 function setOnPinEvents(advertsArray) {
-  advertsArray.forEach(function(item, index) {
+  advertsArray.forEach(function (item, index) {
     similarListElement.children[index].addEventListener(`click`, setOnPinClick(item, similarListElement.children[index]), false);
     similarListElement.children[index].addEventListener(`keydown`, setOnPinEnterPress(item, similarListElement.children[index]), false);
   });
 }
 
 function setOnPopupEvents(advertsArray) {
-  advertsArray.forEach(function(item) {
+  advertsArray.forEach(function (item) {
     item.querySelector(`.popup__close`).addEventListener(`click`, setOnPopupCloseClick(item), false);
     item.querySelector(`.popup__close`).addEventListener(`keydown`, setOnPopupCloseEnterPress(item), false);
   });
