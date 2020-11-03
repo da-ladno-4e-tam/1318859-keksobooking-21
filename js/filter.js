@@ -52,9 +52,11 @@ function filterByGuests(advert) {
 
 function filterByFeatures(advert) {
   let arr = [];
-  for (let i = 0; i < features.length; i++) {
-    arr.push(advert.offer.features.indexOf(features[i]));
-  }
+
+  features.forEach(function(item) {
+    arr.push(advert.offer.features.indexOf(item));
+  });
+
   return (!arr.includes(-1));
 }
 
@@ -69,6 +71,7 @@ function filterAdverts(adverts, filteredAdverts) {
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfRoomsAdverts);
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfGuestsAdverts);
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfFeatures);
+
   if (resultAdverts.length > window.main.MAX_SIMILAR_ADVERT_COUNT) {
     for (let i = 0; i < window.main.MAX_SIMILAR_ADVERT_COUNT; i++) {
       filteredAdverts.push(resultAdverts[i]);
@@ -100,19 +103,20 @@ filterOfGuests.addEventListener(`change`, function () {
   window.debounce.debounce(onFilterChange);
 });
 
-for (let i = 0; i < featuresArray.length; i++) {
-  featuresArray[i].addEventListener(`change`, function () {
-    if (featuresArray[i].checked) {
-      features.push(featuresArray[i].value);
+
+featuresArray.forEach(function (item) {
+  item.addEventListener(`change`, function () {
+    if (item.checked) {
+      features.push(item.value);
     } else {
-      const index = features.indexOf(featuresArray[i].value);
+      const index = features.indexOf(item.value);
       if (index > -1) {
         features.splice(index, 1);
       }
     }
     window.debounce.debounce(onFilterChange);
   });
-}
+});
 
 window.filter = {
   filterAdverts,

@@ -134,17 +134,17 @@ function onError(errorMessage) {
 }
 
 function setOnPinEvents(advertsArray) {
-  for (let i = 0; i < advertsArray.length; i++) {
-    similarListElement.children[i].addEventListener(`click`, setOnPinClick(advertsArray[i], similarListElement.children[i]), false);
-    similarListElement.children[i].addEventListener(`keydown`, setOnPinEnterPress(advertsArray[i], similarListElement.children[i]), false);
-  }
+  advertsArray.forEach(function(item, index) {
+    similarListElement.children[index].addEventListener(`click`, setOnPinClick(item, similarListElement.children[index]), false);
+    similarListElement.children[index].addEventListener(`keydown`, setOnPinEnterPress(item, similarListElement.children[index]), false);
+  });
 }
 
 function setOnPopupEvents(advertsArray) {
-  for (let i = 0; i < advertsArray.length; i++) {
-    advertsArray[i].querySelector(`.popup__close`).addEventListener(`click`, setOnPopupCloseClick(advertsArray[i]), false);
-    advertsArray[i].querySelector(`.popup__close`).addEventListener(`keydown`, setOnPopupCloseEnterPress(advertsArray[i]), false);
-  }
+  advertsArray.forEach(function(item) {
+    item.querySelector(`.popup__close`).addEventListener(`click`, setOnPopupCloseClick(item), false);
+    item.querySelector(`.popup__close`).addEventListener(`keydown`, setOnPopupCloseEnterPress(item), false);
+  });
 }
 
 function hideAllAdverts() {
@@ -225,15 +225,15 @@ function deactivateForm() {
 }
 
 function hidePins() {
-  for (let i = 0; i < domAdverts.length; i++) {
-    similarListElement.children[i].classList.add(`hidden`);
-  }
+  domAdverts.forEach(function (index) {
+    similarListElement.children[index].classList.add(`hidden`);
+  });
 }
 
 function showPins() {
-  for (let i = 0; i < domAdverts.length; i++) {
-    similarListElement.children[i].classList.remove(`hidden`);
-  }
+  domAdverts.forEach(function (index) {
+    similarListElement.children[index].classList.remove(`hidden`);
+  });
 }
 
 function disableForm() {

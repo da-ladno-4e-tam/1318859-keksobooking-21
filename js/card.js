@@ -38,11 +38,12 @@ function renderPhotos(photoData, template, photos) {
     template.parentNode.removeChild(template);
   } else {
     template.src = photoData[0];
-    for (let i = 1; i < photoData.length; i++) {
+
+    photoData.forEach(function (item, index) {
       const newPhoto = template.cloneNode(true);
       photos.append(newPhoto);
-      photos.children[i].src = photoData[i];
-    }
+      photos.children[index].src = item;
+    });
   }
 }
 
