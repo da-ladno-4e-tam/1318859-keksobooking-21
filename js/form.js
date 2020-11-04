@@ -26,29 +26,24 @@ const customValidities = {
 function validateCapacity() {
   const capacityValue = Number(capacityInput.value);
   const roomsValue = Number(roomNumberInput.value);
-  if ((capacityValue > roomsValue) || (roomsValue === Number(roomNumberOneHundred.value) && capacityValue !== roomsValue)) {
-    capacityInput.setCustomValidity(customValidities.capacity);
-  } else {
-    capacityInput.setCustomValidity(``);
-  }
+
+  capacityInput.setCustomValidity((capacityValue > roomsValue) || (roomsValue === Number(roomNumberOneHundred.value) && capacityValue !== roomsValue) ? customValidities.capacity : ``);
   capacityInput.reportValidity();
 }
 
 function validatePicture(element) {
   element.addEventListener(`input`, function () {
     const path = element.value;
-    if (REGULAR_FOR_IMAGES.test(path)) {
-      element.setCustomValidity(``);
-    } else {
-      element.setCustomValidity(customValidities.images);
-    }
+
+    element.setCustomValidity(REGULAR_FOR_IMAGES.test(path) ? `` : customValidities.images);
     element.reportValidity();
   });
 }
 
 function validateTitle() {
   const titleValueLength = titleInput.value.length;
-
+  // titleInput.setCustomValidity(titleValueLength < MIN_TITLE_LENGTH ? customValidities.title.minLength :
+  //   titleValueLength > MAX_TITLE_LENGTH ? customValidities.title.maxLength : ``);
   if (titleValueLength < MIN_TITLE_LENGTH) {
     titleInput.setCustomValidity(customValidities.title.minLength);
   } else if (titleValueLength > MAX_TITLE_LENGTH) {
@@ -56,17 +51,11 @@ function validateTitle() {
   } else {
     titleInput.setCustomValidity(``);
   }
-
   titleInput.reportValidity();
 }
 
 function validatePrice() {
-  if (priceInput.value > window.main.MAX_PRICE) {
-    priceInput.setCustomValidity(customValidities.price);
-  } else {
-    priceInput.setCustomValidity(``);
-  }
-
+  priceInput.setCustomValidity(priceInput.value > window.main.MAX_PRICE ? customValidities.price : ``);
   priceInput.reportValidity();
 }
 
