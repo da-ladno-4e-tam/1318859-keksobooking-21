@@ -13,7 +13,7 @@ let numberOfGuests = window.main.ANY_CHOICE;
 let features = [];
 
 
-function refreshFilters() {
+function cancelChanges() {
   typeOfHouse = window.main.ANY_CHOICE;
   price = window.main.ANY_CHOICE;
   numberOfRooms = window.main.ANY_CHOICE;
@@ -60,7 +60,7 @@ function filterByFeatures(advert) {
   return (!arr.includes(-1));
 }
 
-function filterAdverts(adverts, filteredAdverts) {
+function selectAdverts(adverts, filteredAdverts) {
   const sameTypeOfHouseAdverts = adverts.filter(filterByType);
   const samePriceAdverts = adverts.filter(filterByPrice);
   const sameTypeOfRoomsAdverts = adverts.filter(filterByRooms);
@@ -119,6 +119,6 @@ featuresArray.forEach(function (item) {
 });
 
 window.filter = {
-  filterAdverts,
-  refreshFilters
+  selectAdverts,
+  cancelChanges
 };

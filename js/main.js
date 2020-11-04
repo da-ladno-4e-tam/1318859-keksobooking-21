@@ -35,10 +35,10 @@ const avatarPreview = adForm.querySelector(`.ad-form-header__preview img`);
 const adFormFieldsets = adForm.querySelectorAll(`fieldset`);
 const addressInput = adForm.querySelector(`#address`);
 const resetButton = adForm.querySelector(`.ad-form__reset`);
-const mainPin = map.querySelector(`.map__pin--main`);
+const majorPin = map.querySelector(`.map__pin--main`);
 const similarListElement = map.querySelector(`.map__pins`);
-const noActiveMainPinX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
-const noActiveMainPinY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
+const noActivemajorPinX = Math.round(majorPin.offsetLeft + majorPin.offsetWidth / 2);
+const noActivemajorPinY = Math.round(majorPin.offsetTop + majorPin.offsetHeight / 2);
 const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
 const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
 
@@ -47,8 +47,8 @@ let adverts = [];
 let filteredAdverts = [];
 
 function updateAdverts() {
-  filteredAdverts = window.filter.filterAdverts(adverts, filteredAdverts);
-  window.utils.getContent(window.pin.renderPin, filteredAdverts, similarListElement, 0);
+  filteredAdverts = window.filter.selectAdverts(adverts, filteredAdverts);
+  window.utils.getContent(window.pin.renderBadge, filteredAdverts, similarListElement, 0);
   window.utils.getContent(window.card.renderPopup, filteredAdverts, map, 1);
   getDomAdverts(filteredAdverts);
   setOnPinEvents(domAdverts);
@@ -72,19 +72,19 @@ function getDomAdverts(arr) {
   return domAdverts;
 }
 
-function onMainPinClick(evt) {
+function onmajorPinClick(evt) {
   if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
     activateMap();
-    mainPin.removeEventListener(`keydown`, onMainPinClick);
-    mainPin.removeEventListener(`mousedown`, onMainPinClick);
+    majorPin.removeEventListener(`keydown`, onmajorPinClick);
+    majorPin.removeEventListener(`mousedown`, onmajorPinClick);
   }
 }
 
-function onMainPinSecondClick(evt) {
+function onmajorPinSecondClick(evt) {
   if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
     reactivateMap();
-    mainPin.removeEventListener(`mousedown`, onMainPinSecondClick);
-    mainPin.removeEventListener(`keydown`, onMainPinSecondClick);
+    majorPin.removeEventListener(`mousedown`, onmajorPinSecondClick);
+    majorPin.removeEventListener(`keydown`, onmajorPinSecondClick);
   }
 }
 
@@ -223,7 +223,7 @@ function deactivateForm() {
   window.utils.disableElementsInArray(filterSelects, true);
   window.utils.disableElementsInArray(filterFieldsets, true);
   window.utils.disableElementsInArray(adFormFieldsets, true);
-  addressInput.setAttribute(`value`, `${noActiveMainPinX}, ${noActiveMainPinY}`);
+  addressInput.setAttribute(`value`, `${noActivemajorPinX}, ${noActivemajorPinY}`);
 }
 
 function hidePins() {
@@ -247,14 +247,14 @@ function disableForm() {
   adForm.reset();
 }
 
-function moveMainPinToStart() {
-  mainPin.style.left = `570px`;
-  mainPin.style.top = `375px`;
+function movemajorPinToStart() {
+  majorPin.style.left = `570px`;
+  majorPin.style.top = `375px`;
 }
 
-function setMainPinEvents() {
-  mainPin.addEventListener(`mousedown`, onMainPinSecondClick);
-  mainPin.addEventListener(`keydown`, onMainPinSecondClick);
+function setmajorPinEvents() {
+  majorPin.addEventListener(`mousedown`, onmajorPinSecondClick);
+  majorPin.addEventListener(`keydown`, onmajorPinSecondClick);
 }
 
 function deactivateMap() {
@@ -265,13 +265,13 @@ function deactivateMap() {
   map.classList.add(`map--faded`);
   mapFilters.reset();
   clearAdverts();
-  window.filter.refreshFilters();
-  moveMainPinToStart();
+  window.filter.cancelChanges();
+  movemajorPinToStart();
   disableForm();
   hideAllAdverts();
   hidePins();
   deactivatePins();
-  setMainPinEvents();
+  setmajorPinEvents();
 }
 
 function onSubmit(evt) {
@@ -321,8 +321,8 @@ function onFormMessageEscPress(evt) {
 
 deactivateForm();
 
-mainPin.addEventListener(`mousedown`, onMainPinClick);
-mainPin.addEventListener(`keydown`, onMainPinClick);
+majorPin.addEventListener(`mousedown`, onmajorPinClick);
+majorPin.addEventListener(`keydown`, onmajorPinClick);
 
 adForm.addEventListener(`submit`, onSubmit);
 
@@ -338,7 +338,7 @@ window.main = {
   mapFilters,
   adForm,
   similarListElement,
-  mainPin,
+  majorPin,
   addressInput,
   roomPreviewContainer,
   avatarPreview,
