@@ -37,8 +37,8 @@ const addressInput = adForm.querySelector(`#address`);
 const resetButton = adForm.querySelector(`.ad-form__reset`);
 const majorPin = map.querySelector(`.map__pin--main`);
 const similarListElement = map.querySelector(`.map__pins`);
-const noActivemajorPinX = Math.round(majorPin.offsetLeft + majorPin.offsetWidth / 2);
-const noActivemajorPinY = Math.round(majorPin.offsetTop + majorPin.offsetHeight / 2);
+const noActiveMajorPinX = Math.round(majorPin.offsetLeft + majorPin.offsetWidth / 2);
+const noActiveMajorPinY = Math.round(majorPin.offsetTop + majorPin.offsetHeight / 2);
 const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
 const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
 
@@ -47,7 +47,7 @@ let adverts = [];
 let filteredAdverts = [];
 
 function updateAdverts() {
-  filteredAdverts = window.filter.selectAdverts(adverts, filteredAdverts);
+  filteredAdverts = window.filter.selectAdverts(adverts);
   window.utils.getContent(window.pin.renderBadge, filteredAdverts, similarListElement, 0);
   window.utils.getContent(window.card.renderPopup, filteredAdverts, map, 1);
   getDomAdverts(filteredAdverts);
@@ -72,19 +72,19 @@ function getDomAdverts(arr) {
   return domAdverts;
 }
 
-function onmajorPinClick(evt) {
+function onMajorPinClick(evt) {
   if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
     activateMap();
-    majorPin.removeEventListener(`keydown`, onmajorPinClick);
-    majorPin.removeEventListener(`mousedown`, onmajorPinClick);
+    majorPin.removeEventListener(`keydown`, onMajorPinClick);
+    majorPin.removeEventListener(`mousedown`, onMajorPinClick);
   }
 }
 
-function onmajorPinSecondClick(evt) {
+function onMajorPinSecondClick(evt) {
   if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
     reactivateMap();
-    majorPin.removeEventListener(`mousedown`, onmajorPinSecondClick);
-    majorPin.removeEventListener(`keydown`, onmajorPinSecondClick);
+    majorPin.removeEventListener(`mousedown`, onMajorPinSecondClick);
+    majorPin.removeEventListener(`keydown`, onMajorPinSecondClick);
   }
 }
 
@@ -223,7 +223,7 @@ function deactivateForm() {
   window.utils.disableElementsInArray(filterSelects, true);
   window.utils.disableElementsInArray(filterFieldsets, true);
   window.utils.disableElementsInArray(adFormFieldsets, true);
-  addressInput.setAttribute(`value`, `${noActivemajorPinX}, ${noActivemajorPinY}`);
+  addressInput.setAttribute(`value`, `${noActiveMajorPinX}, ${noActiveMajorPinY}`);
 }
 
 function hidePins() {
@@ -240,21 +240,18 @@ function showPins() {
 
 function disableForm() {
   adForm.classList.add(`ad-form--disabled`);
-  window.utils.disableElementsInArray(filterSelects, true);
-  window.utils.disableElementsInArray(filterFieldsets, true);
-  window.utils.disableElementsInArray(adFormFieldsets, true);
   deactivateForm();
   adForm.reset();
 }
 
-function movemajorPinToStart() {
+function moveMajorPinToStart() {
   majorPin.style.left = `570px`;
   majorPin.style.top = `375px`;
 }
 
-function setmajorPinEvents() {
-  majorPin.addEventListener(`mousedown`, onmajorPinSecondClick);
-  majorPin.addEventListener(`keydown`, onmajorPinSecondClick);
+function setMajorPinEvents() {
+  majorPin.addEventListener(`mousedown`, onMajorPinSecondClick);
+  majorPin.addEventListener(`keydown`, onMajorPinSecondClick);
 }
 
 function deactivateMap() {
@@ -266,12 +263,12 @@ function deactivateMap() {
   mapFilters.reset();
   clearAdverts();
   window.filter.cancelChanges();
-  movemajorPinToStart();
+  moveMajorPinToStart();
   disableForm();
   hideAllAdverts();
   hidePins();
   deactivatePins();
-  setmajorPinEvents();
+  setMajorPinEvents();
 }
 
 function onSubmit(evt) {
@@ -321,8 +318,8 @@ function onFormMessageEscPress(evt) {
 
 deactivateForm();
 
-majorPin.addEventListener(`mousedown`, onmajorPinClick);
-majorPin.addEventListener(`keydown`, onmajorPinClick);
+majorPin.addEventListener(`mousedown`, onMajorPinClick);
+majorPin.addEventListener(`keydown`, onMajorPinClick);
 
 adForm.addEventListener(`submit`, onSubmit);
 

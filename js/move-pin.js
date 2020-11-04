@@ -16,10 +16,10 @@ window.main.majorPin.addEventListener(`mousedown`, function (evt) {
     x: evt.clientX,
     y: evt.clientY
   };
-  let activemajorPinX = Math.round(window.main.majorPin.offsetLeft + window.main.majorPin.offsetWidth / 2);
-  let activemajorPinY = Math.round(window.main.majorPin.offsetTop + MAIN_PIN_HEIGHT);
+  let activeMajorPinX = Math.round(window.main.majorPin.offsetLeft + window.main.majorPin.offsetWidth / 2);
+  let activeMajorPinY = Math.round(window.main.majorPin.offsetTop + MAIN_PIN_HEIGHT);
 
-  window.main.addressInput.setAttribute(`value`, `${activemajorPinX}, ${activemajorPinY}`);
+  window.main.addressInput.setAttribute(`value`, `${activeMajorPinX}, ${activeMajorPinY}`);
 
   function onMouseMove(moveEvt) {
     moveEvt.preventDefault();
@@ -28,11 +28,11 @@ window.main.majorPin.addEventListener(`mousedown`, function (evt) {
       x: startCoords.x - moveEvt.clientX,
       y: startCoords.y - moveEvt.clientY
     };
-    const currentX = activemajorPinX - shift.x;
-    const currentY = activemajorPinY - shift.y;
+    const currentX = activeMajorPinX - shift.x;
+    const currentY = activeMajorPinY - shift.y;
 
-    activemajorPinX = Math.round(window.main.majorPin.offsetLeft + window.main.majorPin.offsetWidth / 2);
-    activemajorPinY = Math.round(window.main.majorPin.offsetTop + MAIN_PIN_HEIGHT);
+    activeMajorPinX = Math.round(window.main.majorPin.offsetLeft + window.main.majorPin.offsetWidth / 2);
+    activeMajorPinY = Math.round(window.main.majorPin.offsetTop + MAIN_PIN_HEIGHT);
     startCoords = {
       x: moveEvt.clientX,
       y: moveEvt.clientY

@@ -11,11 +11,7 @@ function getContent(render, arr, parent, child) {
 
 function disableElementsInArray(arr, flag) {
   arr.forEach(function (item) {
-    if (flag) {
-      item.setAttribute(`disabled`, `disabled`);
-    } else {
-      item.removeAttribute(`disabled`);
-    }
+    item.disabled = flag;
   });
 }
 

@@ -66,7 +66,7 @@ function filterByFeatures(advert) {
   return (!arr.includes(-1));
 }
 
-function selectAdverts(adverts, filteredAdverts) {
+function selectAdverts(adverts) {
   const sameTypeOfHouseAdverts = adverts.filter(filterByType);
   const samePriceAdverts = adverts.filter(filterByPrice);
   const sameTypeOfRoomsAdverts = adverts.filter(filterByRooms);
@@ -77,15 +77,8 @@ function selectAdverts(adverts, filteredAdverts) {
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfRoomsAdverts);
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfGuestsAdverts);
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfFeatures);
-
-  if (resultAdverts.length > window.main.MAX_SIMILAR_ADVERT_COUNT) {
-    for (let i = 0; i < window.main.MAX_SIMILAR_ADVERT_COUNT; i++) {
-      filteredAdverts.push(resultAdverts[i]);
-    }
-  } else {
-    filteredAdverts = resultAdverts;
-  }
-  return filteredAdverts;
+``
+  return resultAdverts.slice(0, window.main.MAX_SIMILAR_ADVERT_COUNT);
 }
 
 
