@@ -83,6 +83,8 @@ function onMainPinClick(evt) {
 function onMainPinSecondClick(evt) {
   if (evt.key === KEY_ENTER || evt.which === MOUSE_BUTTON_LEFT) {
     reactivateMap();
+    mainPin.removeEventListener(`mousedown`, onMainPinSecondClick);
+    mainPin.removeEventListener(`keydown`, onMainPinSecondClick);
   }
 }
 
