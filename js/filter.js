@@ -31,6 +31,12 @@ function onFilterChange() {
 }
 
 function intersectArrays(array, subArray) {
+
+  // return array.filter(function (item) {
+  //   subArray.includes(item);
+  // });
+
+
   return array.filter((item) => subArray.includes(item));
 }
 
