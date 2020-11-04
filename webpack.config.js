@@ -10,7 +10,6 @@ module.exports = {
     "/js/avatar.js",
     "/js/move-pin.js",
     "/js/form.js",
-    "/js/debounce.js",
     "/js/filter.js"
   ],
   output: {

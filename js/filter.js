@@ -83,29 +83,29 @@ function filterAdverts(adverts, filteredAdverts) {
 }
 
 
-filterOfType.addEventListener(`change`, window.debounce.debounce(function () {
+filterOfType.addEventListener(`change`, window.utils.debounce(function () {
   typeOfHouse = filterOfType.value;
   onFilterChange();
 }));
 
-filterOfPrice.addEventListener(`change`, window.debounce.debounce(function () {
+filterOfPrice.addEventListener(`change`, window.utils.debounce(function () {
   price = filterOfPrice.value;
   onFilterChange();
 }));
 
-filterOfRooms.addEventListener(`change`, window.debounce.debounce(function () {
+filterOfRooms.addEventListener(`change`, window.utils.debounce(function () {
   numberOfRooms = filterOfRooms.value;
   onFilterChange();
 }));
 
-filterOfGuests.addEventListener(`change`, window.debounce.debounce(function () {
+filterOfGuests.addEventListener(`change`, window.utils.debounce(function () {
   numberOfGuests = filterOfGuests.value;
   onFilterChange();
 }));
 
 
 featuresArray.forEach(function (item) {
-  item.addEventListener(`change`, window.debounce.debounce(function () {
+  item.addEventListener(`change`, window.utils.debounce(function () {
     if (item.checked) {
       features.push(item.value);
     } else {
