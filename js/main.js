@@ -1,8 +1,8 @@
 'use strict';
 
+const MOUSE_BUTTON_LEFT = 1;
 const KEY_ENTER = `Enter`;
 const KEY_ESCAPE = `Escape`;
-const MOUSE_BUTTON_LEFT = 1;
 const MAX_SIMILAR_ADVERT_COUNT = 5;
 const MAX_PRICE = 1000000;
 const ANY_CHOICE = `any`;
