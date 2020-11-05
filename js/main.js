@@ -217,7 +217,7 @@ function deactivateForm() {
   window.utils.disableElementsInArray(filterSelects, true);
   window.utils.disableElementsInArray(filterFieldsets, true);
   window.utils.disableElementsInArray(adFormFieldsets, true);
-  addressInput.setAttribute(`value`, `${noActiveMajorPinX}, ${noActiveMajorPinY}`);
+  addressInput.value = `${noActiveMajorPinX}, ${noActiveMajorPinY}`;
 }
 
 function hidePins() {

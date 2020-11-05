@@ -58,7 +58,7 @@ function validatePrice() {
 }
 
 typeInput.addEventListener(`input`, function () {
-  priceInput.setAttribute(`min`, `${window.card.TYPES_OF_HOUSE[typeInput.value].MIN_PRICE}`);
+  priceInput.min = `${window.card.TYPES_OF_HOUSE[typeInput.value].MIN_PRICE}`;
   priceInput.placeholder = `${window.card.TYPES_OF_HOUSE[typeInput.value].MIN_PRICE}`;
 });
 

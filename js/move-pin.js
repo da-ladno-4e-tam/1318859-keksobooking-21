@@ -6,7 +6,7 @@ const MAIN_PIN_TIP = 22;
 const MAIN_PIN_HEIGHT = window.main.majorPin.offsetHeight + MAIN_PIN_TIP;
 
 function fillAddress(currentX, currentY) {
-  window.main.addressInput.setAttribute(`value`, `${currentX}, ${currentY}`);
+  window.main.addressInput.value = `${currentX}, ${currentY}`;
 }
 
 window.main.majorPin.addEventListener(`mousedown`, function (evt) {
@@ -19,7 +19,7 @@ window.main.majorPin.addEventListener(`mousedown`, function (evt) {
   let activeMajorPinX = Math.round(window.main.majorPin.offsetLeft + window.main.majorPin.offsetWidth / 2);
   let activeMajorPinY = Math.round(window.main.majorPin.offsetTop + MAIN_PIN_HEIGHT);
 
-  window.main.addressInput.setAttribute(`value`, `${activeMajorPinX}, ${activeMajorPinY}`);
+  window.main.addressInput.value = `${activeMajorPinX}, ${activeMajorPinY}`;
 
   function onMouseMove(moveEvt) {
     moveEvt.preventDefault();
