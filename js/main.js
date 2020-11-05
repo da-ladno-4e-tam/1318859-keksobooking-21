@@ -124,13 +124,7 @@ function onLoad(data) {
 
 function onError(errorMessage) {
   const node = document.createElement(`div`);
-  node.style = `z-index: 1; margin: 0 auto; text-align: center; background-color: yellow;`;
-  node.style.position = `absolute`;
-  node.style.left = 0;
-  node.style.bottom = `46px`;
-  node.style.right = 0;
-  node.style.fontSize = `28px`;
-
+  node.classList.add(`request-error`);
   node.textContent = errorMessage;
   map.insertAdjacentElement(`afterbegin`, node);
 }

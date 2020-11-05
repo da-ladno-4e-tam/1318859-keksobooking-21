@@ -77,7 +77,7 @@ function selectAdverts(adverts) {
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfRoomsAdverts);
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfGuestsAdverts);
   resultAdverts = intersectArrays(resultAdverts, sameTypeOfFeatures);
-``
+
   return resultAdverts.slice(0, window.main.MAX_SIMILAR_ADVERT_COUNT);
 }
 

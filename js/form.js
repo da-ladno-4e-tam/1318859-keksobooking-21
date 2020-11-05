@@ -42,8 +42,6 @@ function validatePicture(element) {
 
 function validateTitle() {
   const titleValueLength = titleInput.value.length;
-  // titleInput.setCustomValidity(titleValueLength < MIN_TITLE_LENGTH ? customValidities.title.minLength :
-  //   titleValueLength > MAX_TITLE_LENGTH ? customValidities.title.maxLength : ``);
   if (titleValueLength < MIN_TITLE_LENGTH) {
     titleInput.setCustomValidity(customValidities.title.minLength);
   } else if (titleValueLength > MAX_TITLE_LENGTH) {
